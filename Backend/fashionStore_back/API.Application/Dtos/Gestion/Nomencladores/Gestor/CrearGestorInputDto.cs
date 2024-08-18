@@ -6,7 +6,6 @@ namespace API.Application.Dtos.Gestion.Nomencladores.Gestor
     {
         [JsonIgnore]
         public new Guid Id { get; set; }
-        public required List<Guid> ProductosIds { get; set; } = new();
-        public required List<Guid> VentasIds { get; set; } = new();
+      //  public List<Guid> ProductosIds { get; set; } = new();
     }
 }

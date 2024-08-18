@@ -11,7 +11,7 @@ public class ConversionPrecioConfiguracionDB
         EntidadBaseConfiguracionBD<ConversionPrecio>.SetEntityBuilder(modelBuilder);
 
         modelBuilder.Entity<ConversionPrecio>().Property(e => e.Descripcion).HasMaxLength(100).IsRequired();
-        modelBuilder.Entity<ConversionPrecio>().Property(e => e.valorCambio);
+        modelBuilder.Entity<ConversionPrecio>().Property(e => e.ValorCambio);
 
         modelBuilder.Entity<ConversionPrecio>().HasIndex(e => new { e.Descripcion }).IsUnique();
     }

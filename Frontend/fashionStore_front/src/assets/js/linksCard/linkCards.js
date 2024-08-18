@@ -6,11 +6,11 @@ export const cardsGestion = Object.freeze([
         icon: "view_quilt",
         link: "Conversion_Precio",
     },
-    {
+   /* {
         title: "Estado del Producto",
         icon: "view_quilt",
         link: "Estado_Producto",
-    },
+    },*/
     {
         title: "Producto",
         icon: "view_quilt",

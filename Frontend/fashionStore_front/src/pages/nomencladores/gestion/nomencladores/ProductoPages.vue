@@ -115,6 +115,7 @@
                     </q-input>
 
                     <q-select
+                        v-show="!!objeto.id"
                         transition-show="flip-up"
                         transition-hide="flip-down"
                         class="col-xs-12 col-sm-6"
@@ -224,7 +225,7 @@ const objetoInicial = {
     precioUSD: 0,
     //imagen: null,
     cantidad: 1,
-    estadoProductoId: null
+    estadoProductoId: "1C8FCFE3-5718-4A36-BD3A-681241488A6B"
 }
 
 // Crear una copia del objeto inicial
@@ -261,6 +262,7 @@ onMounted(async () => {
 // 1- Funcion para pasar parametros en el Adicionar SaveData
 const Guardar = () => {
     const url = objeto.id ? 'Producto/Actualizar' : 'Producto/Crear'
+    console.log("objeto: ",objeto)
     saveData(url, objeto, load, close, dialogLoad)
 }
 

@@ -138,7 +138,7 @@ export const dataColumnGestor = Object.freeze([
         name: 'apellido',
         align: 'center',
         label: 'Apellidos',
-        field: 'apellido',
+        field: 'apellidos',
         sortable: true
     },
     {

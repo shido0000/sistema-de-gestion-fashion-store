@@ -22,10 +22,10 @@ namespace API.Data.IUnitOfWorks.Interfaces
         IEstadoProducto EstadosProductos { get; }
         IProducto Productos { get; }
         IGestor Gestores { get; }
-        IProductoGestor ProductosGestores { get; }
+        public IProductoVenta ProductosVentas { get; }
         IVenta Ventas { get; }
         IValeDeVenta ValesDeVentas { get; }
-        IVentaGestor VentasGestores { get; }
+       
 
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);

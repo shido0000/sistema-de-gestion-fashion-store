@@ -2,7 +2,7 @@
 
 namespace API.Data.IUnitOfWorks.Interfaces.Gestion.Nomencladores
 {
-    public interface IVentaGestor : IBaseRepository<VentaGestor>
+    public interface IProductoVenta : IBaseRepository<ProductoVenta>
     {
     }
 }

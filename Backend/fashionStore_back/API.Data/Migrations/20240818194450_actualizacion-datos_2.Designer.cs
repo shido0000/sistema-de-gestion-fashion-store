@@ -4,6 +4,7 @@ using API.Data.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    partial class ApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240818194450_actualizacion-datos_2")]
+    partial class actualizaciondatos_2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -99,8 +102,8 @@ namespace API.Data.Migrations
                             ActualizadoPor = "",
                             CreadoPor = "",
                             Descripcion = "Disponible",
-                            FechaActualizado = new DateTime(2024, 8, 18, 15, 17, 29, 881, DateTimeKind.Local).AddTicks(9476),
-                            FechaCreado = new DateTime(2024, 8, 18, 15, 17, 29, 881, DateTimeKind.Local).AddTicks(9473)
+                            FechaActualizado = new DateTime(2024, 8, 18, 13, 44, 50, 45, DateTimeKind.Local).AddTicks(9329),
+                            FechaCreado = new DateTime(2024, 8, 18, 13, 44, 50, 45, DateTimeKind.Local).AddTicks(9326)
                         },
                         new
                         {
@@ -108,8 +111,8 @@ namespace API.Data.Migrations
                             ActualizadoPor = "",
                             CreadoPor = "",
                             Descripcion = "Agotado",
-                            FechaActualizado = new DateTime(2024, 8, 18, 15, 17, 29, 881, DateTimeKind.Local).AddTicks(9483),
-                            FechaCreado = new DateTime(2024, 8, 18, 15, 17, 29, 881, DateTimeKind.Local).AddTicks(9483)
+                            FechaActualizado = new DateTime(2024, 8, 18, 13, 44, 50, 45, DateTimeKind.Local).AddTicks(9336),
+                            FechaCreado = new DateTime(2024, 8, 18, 13, 44, 50, 45, DateTimeKind.Local).AddTicks(9335)
                         },
                         new
                         {
@@ -117,8 +120,8 @@ namespace API.Data.Migrations
                             ActualizadoPor = "",
                             CreadoPor = "",
                             Descripcion = "Reservado",
-                            FechaActualizado = new DateTime(2024, 8, 18, 15, 17, 29, 881, DateTimeKind.Local).AddTicks(9485),
-                            FechaCreado = new DateTime(2024, 8, 18, 15, 17, 29, 881, DateTimeKind.Local).AddTicks(9485)
+                            FechaActualizado = new DateTime(2024, 8, 18, 13, 44, 50, 45, DateTimeKind.Local).AddTicks(9338),
+                            FechaCreado = new DateTime(2024, 8, 18, 13, 44, 50, 45, DateTimeKind.Local).AddTicks(9337)
                         });
                 });
 
@@ -188,7 +191,7 @@ namespace API.Data.Migrations
 
                     b.Property<string>("Codigo")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<float>("Costo")
                         .HasColumnType("real");
@@ -215,9 +218,6 @@ namespace API.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Codigo")
-                        .IsUnique();
-
                     b.HasIndex("EstadoProductoId");
 
                     b.HasIndex("Id")
@@ -226,7 +226,7 @@ namespace API.Data.Migrations
                     b.ToTable("Productos", (string)null);
                 });
 
-            modelBuilder.Entity("API.Data.Entidades.Gestion.Nomencladores.ProductoVenta", b =>
+            modelBuilder.Entity("API.Data.Entidades.Gestion.Nomencladores.ProductoGestor", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -235,9 +235,6 @@ namespace API.Data.Migrations
                     b.Property<string>("ActualizadoPor")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Cantidad")
-                        .HasColumnType("int");
 
                     b.Property<string>("CreadoPor")
                         .IsRequired()
@@ -249,13 +246,13 @@ namespace API.Data.Migrations
                     b.Property<DateTime>("FechaCreado")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("GestorId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<float>("PrecioGestor")
                         .HasColumnType("real");
 
                     b.Property<Guid>("ProductoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("VentaId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -265,10 +262,10 @@ namespace API.Data.Migrations
 
                     b.HasIndex("ProductoId");
 
-                    b.HasIndex("VentaId", "ProductoId")
+                    b.HasIndex("GestorId", "ProductoId")
                         .IsUnique();
 
-                    b.ToTable("ProductosVentas", (string)null);
+                    b.ToTable("ProductosGestores", (string)null);
                 });
 
             modelBuilder.Entity("API.Data.Entidades.Gestion.Nomencladores.ValeDeVenta", b =>
@@ -390,8 +387,8 @@ namespace API.Data.Migrations
                             ActualizadoPor = "",
                             CreadoPor = "",
                             Descripcion = "Permite ver los usuarios existentes en el sistema y sus datos.",
-                            FechaActualizado = new DateTime(2024, 8, 18, 15, 17, 29, 881, DateTimeKind.Local).AddTicks(1034),
-                            FechaCreado = new DateTime(2024, 8, 18, 15, 17, 29, 881, DateTimeKind.Local).AddTicks(1033),
+                            FechaActualizado = new DateTime(2024, 8, 18, 13, 44, 50, 45, DateTimeKind.Local).AddTicks(1463),
+                            FechaCreado = new DateTime(2024, 8, 18, 13, 44, 50, 45, DateTimeKind.Local).AddTicks(1462),
                             Nombre = "Listar usuarios"
                         },
                         new
@@ -400,8 +397,8 @@ namespace API.Data.Migrations
                             ActualizadoPor = "",
                             CreadoPor = "",
                             Descripcion = "Permite ver, crear, modificar y eliminar usuarios en el sistema.",
-                            FechaActualizado = new DateTime(2024, 8, 18, 15, 17, 29, 881, DateTimeKind.Local).AddTicks(1046),
-                            FechaCreado = new DateTime(2024, 8, 18, 15, 17, 29, 881, DateTimeKind.Local).AddTicks(1045),
+                            FechaActualizado = new DateTime(2024, 8, 18, 13, 44, 50, 45, DateTimeKind.Local).AddTicks(1475),
+                            FechaCreado = new DateTime(2024, 8, 18, 13, 44, 50, 45, DateTimeKind.Local).AddTicks(1474),
                             Nombre = "Gestionar usuarios"
                         },
                         new
@@ -410,8 +407,8 @@ namespace API.Data.Migrations
                             ActualizadoPor = "",
                             CreadoPor = "",
                             Descripcion = "Permite ver los roles existentes en el sistema y sus datos.",
-                            FechaActualizado = new DateTime(2024, 8, 18, 15, 17, 29, 881, DateTimeKind.Local).AddTicks(1048),
-                            FechaCreado = new DateTime(2024, 8, 18, 15, 17, 29, 881, DateTimeKind.Local).AddTicks(1047),
+                            FechaActualizado = new DateTime(2024, 8, 18, 13, 44, 50, 45, DateTimeKind.Local).AddTicks(1477),
+                            FechaCreado = new DateTime(2024, 8, 18, 13, 44, 50, 45, DateTimeKind.Local).AddTicks(1477),
                             Nombre = "Listar roles"
                         },
                         new
@@ -420,8 +417,8 @@ namespace API.Data.Migrations
                             ActualizadoPor = "",
                             CreadoPor = "",
                             Descripcion = "Permite ver, crear, modificar y eliminar roles en el sistema.",
-                            FechaActualizado = new DateTime(2024, 8, 18, 15, 17, 29, 881, DateTimeKind.Local).AddTicks(1050),
-                            FechaCreado = new DateTime(2024, 8, 18, 15, 17, 29, 881, DateTimeKind.Local).AddTicks(1049),
+                            FechaActualizado = new DateTime(2024, 8, 18, 13, 44, 50, 45, DateTimeKind.Local).AddTicks(1481),
+                            FechaCreado = new DateTime(2024, 8, 18, 13, 44, 50, 45, DateTimeKind.Local).AddTicks(1481),
                             Nombre = "Gestionar rol"
                         });
                 });
@@ -464,8 +461,8 @@ namespace API.Data.Migrations
                             Id = new Guid("c0b7e3b3-a06e-4580-b985-bb2fc4336522"),
                             ActualizadoPor = "",
                             CreadoPor = "",
-                            FechaActualizado = new DateTime(2024, 8, 18, 15, 17, 29, 881, DateTimeKind.Local).AddTicks(860),
-                            FechaCreado = new DateTime(2024, 8, 18, 15, 17, 29, 881, DateTimeKind.Local).AddTicks(845),
+                            FechaActualizado = new DateTime(2024, 8, 18, 13, 44, 50, 45, DateTimeKind.Local).AddTicks(1270),
+                            FechaCreado = new DateTime(2024, 8, 18, 13, 44, 50, 45, DateTimeKind.Local).AddTicks(1258),
                             Nombre = "Administrador"
                         });
                 });
@@ -514,8 +511,8 @@ namespace API.Data.Migrations
                             Id = new Guid("56b3924b-209b-40fb-9f31-ad75c12f4528"),
                             ActualizadoPor = "",
                             CreadoPor = "",
-                            FechaActualizado = new DateTime(2024, 8, 18, 15, 17, 29, 881, DateTimeKind.Local).AddTicks(1224),
-                            FechaCreado = new DateTime(2024, 8, 18, 15, 17, 29, 881, DateTimeKind.Local).AddTicks(1224),
+                            FechaActualizado = new DateTime(2024, 8, 18, 13, 44, 50, 45, DateTimeKind.Local).AddTicks(1635),
+                            FechaCreado = new DateTime(2024, 8, 18, 13, 44, 50, 45, DateTimeKind.Local).AddTicks(1635),
                             PermisoId = new Guid("56b3924b-209b-40fb-9f31-ad75c12f4528"),
                             RolId = new Guid("c0b7e3b3-a06e-4580-b985-bb2fc4336522")
                         },
@@ -524,8 +521,8 @@ namespace API.Data.Migrations
                             Id = new Guid("4129cf49-cc22-46a1-9625-501855f2da8b"),
                             ActualizadoPor = "",
                             CreadoPor = "",
-                            FechaActualizado = new DateTime(2024, 8, 18, 15, 17, 29, 881, DateTimeKind.Local).AddTicks(1230),
-                            FechaCreado = new DateTime(2024, 8, 18, 15, 17, 29, 881, DateTimeKind.Local).AddTicks(1230),
+                            FechaActualizado = new DateTime(2024, 8, 18, 13, 44, 50, 45, DateTimeKind.Local).AddTicks(1641),
+                            FechaCreado = new DateTime(2024, 8, 18, 13, 44, 50, 45, DateTimeKind.Local).AddTicks(1640),
                             PermisoId = new Guid("4129cf49-cc22-46a1-9625-501855f2da8b"),
                             RolId = new Guid("c0b7e3b3-a06e-4580-b985-bb2fc4336522")
                         },
@@ -534,8 +531,8 @@ namespace API.Data.Migrations
                             Id = new Guid("e36d283c-8b25-42b6-83bd-56edd953e770"),
                             ActualizadoPor = "",
                             CreadoPor = "",
-                            FechaActualizado = new DateTime(2024, 8, 18, 15, 17, 29, 881, DateTimeKind.Local).AddTicks(1231),
-                            FechaCreado = new DateTime(2024, 8, 18, 15, 17, 29, 881, DateTimeKind.Local).AddTicks(1231),
+                            FechaActualizado = new DateTime(2024, 8, 18, 13, 44, 50, 45, DateTimeKind.Local).AddTicks(1642),
+                            FechaCreado = new DateTime(2024, 8, 18, 13, 44, 50, 45, DateTimeKind.Local).AddTicks(1642),
                             PermisoId = new Guid("e36d283c-8b25-42b6-83bd-56edd953e770"),
                             RolId = new Guid("c0b7e3b3-a06e-4580-b985-bb2fc4336522")
                         },
@@ -544,8 +541,8 @@ namespace API.Data.Migrations
                             Id = new Guid("90abf232-a641-478d-8720-f0ae49e8a306"),
                             ActualizadoPor = "",
                             CreadoPor = "",
-                            FechaActualizado = new DateTime(2024, 8, 18, 15, 17, 29, 881, DateTimeKind.Local).AddTicks(1233),
-                            FechaCreado = new DateTime(2024, 8, 18, 15, 17, 29, 881, DateTimeKind.Local).AddTicks(1232),
+                            FechaActualizado = new DateTime(2024, 8, 18, 13, 44, 50, 45, DateTimeKind.Local).AddTicks(1644),
+                            FechaCreado = new DateTime(2024, 8, 18, 13, 44, 50, 45, DateTimeKind.Local).AddTicks(1644),
                             PermisoId = new Guid("90abf232-a641-478d-8720-f0ae49e8a306"),
                             RolId = new Guid("c0b7e3b3-a06e-4580-b985-bb2fc4336522")
                         });
@@ -664,8 +661,8 @@ namespace API.Data.Migrations
                             Correo = "1@api.cu",
                             CreadoPor = "",
                             DebeCambiarContrasenna = false,
-                            FechaActualizado = new DateTime(2024, 8, 18, 15, 17, 29, 881, DateTimeKind.Local).AddTicks(5794),
-                            FechaCreado = new DateTime(2024, 8, 18, 15, 17, 29, 881, DateTimeKind.Local).AddTicks(5791),
+                            FechaActualizado = new DateTime(2024, 8, 18, 13, 44, 50, 45, DateTimeKind.Local).AddTicks(5993),
+                            FechaCreado = new DateTime(2024, 8, 18, 13, 44, 50, 45, DateTimeKind.Local).AddTicks(5989),
                             Nombre = "1",
                             RolId = new Guid("c0b7e3b3-a06e-4580-b985-bb2fc4336522"),
                             Username = "1"
@@ -683,23 +680,23 @@ namespace API.Data.Migrations
                     b.Navigation("EstadoProducto");
                 });
 
-            modelBuilder.Entity("API.Data.Entidades.Gestion.Nomencladores.ProductoVenta", b =>
+            modelBuilder.Entity("API.Data.Entidades.Gestion.Nomencladores.ProductoGestor", b =>
                 {
+                    b.HasOne("API.Data.Entidades.Gestion.Nomencladores.Gestor", "Gestor")
+                        .WithMany("ProductosGestores")
+                        .HasForeignKey("GestorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("API.Data.Entidades.Gestion.Nomencladores.Producto", "Producto")
-                        .WithMany("ProductosVentas")
+                        .WithMany("ProductosGestores")
                         .HasForeignKey("ProductoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("API.Data.Entidades.Gestion.Nomencladores.Venta", "Venta")
-                        .WithMany("ProductosVentas")
-                        .HasForeignKey("VentaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Gestor");
 
                     b.Navigation("Producto");
-
-                    b.Navigation("Venta");
                 });
 
             modelBuilder.Entity("API.Data.Entidades.Gestion.Nomencladores.ValeDeVenta", b =>
@@ -761,17 +758,14 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Data.Entidades.Gestion.Nomencladores.Gestor", b =>
                 {
+                    b.Navigation("ProductosGestores");
+
                     b.Navigation("Ventas");
                 });
 
             modelBuilder.Entity("API.Data.Entidades.Gestion.Nomencladores.Producto", b =>
                 {
-                    b.Navigation("ProductosVentas");
-                });
-
-            modelBuilder.Entity("API.Data.Entidades.Gestion.Nomencladores.Venta", b =>
-                {
-                    b.Navigation("ProductosVentas");
+                    b.Navigation("ProductosGestores");
                 });
 
             modelBuilder.Entity("API.Data.Entidades.Seguridad.Permiso", b =>

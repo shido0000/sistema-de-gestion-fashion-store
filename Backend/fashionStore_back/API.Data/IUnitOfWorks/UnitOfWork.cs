@@ -29,11 +29,11 @@ namespace API.Data.IUnitOfWorks
         public IEstadoProducto EstadosProductos { get; }
         public IProducto Productos { get; }
         public IGestor Gestores { get; }
-        public IProductoGestor ProductosGestores { get; }
+        public IProductoVenta ProductosVentas { get; }
        
         public IVenta Ventas { get; }
         public IValeDeVenta ValesDeVentas { get; }
-        public IVentaGestor VentasGestores { get; }
+      
 
         // BASE
         public IBaseRepository<TEntity> BasicRepository { get; }
@@ -56,12 +56,10 @@ namespace API.Data.IUnitOfWorks
             EstadosProductos = new EstadoProductoRepository(context);
             Productos = new ProductoRepository(context);
             Gestores = new GestorRepository(context);         
-            ProductosGestores = new ProductoGestorRepository(context);
+            ProductosVentas = new ProductoVentaRepository(context);
             Ventas = new VentaRepository(context);
             ValesDeVentas = new ValeDeVentaRepository(context);
-            VentasGestores = new VentaGestorRepository(context);
-            
-           
+             
             
            
 

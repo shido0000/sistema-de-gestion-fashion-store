@@ -25,8 +25,17 @@ const validateForms = Object.freeze({
             return 'Por favor, ingresa solo letras y números, sin espacios en blanco.';
         }
         return true;
-    }
+    },
+
+    onlyLettersAndSpaces: (value) => {
+        // Permite solo letras, espacios en blanco entre palabras y vocales con tildes.
+        const patronCadena = /^[a-zA-ZáéíóúÁÉÍÓÚ]+(?:\s[a-zA-ZáéíóúÁÉÍÓÚ]+)*$/;
+        if (!patronCadena.test(value)) {
+          return 'Por favor, ingresa solo letras, espacios en blanco entre palabras y vocales con tildes.';
+        }
+        return true;
+      }
 
 })
 
-export const { string, onlyLetter_Number, onlyLetter_Number_No_White_Spaces } = validateForms;
+export const { string, onlyLetter_Number, onlyLetter_Number_No_White_Spaces, onlyLettersAndSpaces } = validateForms;

@@ -11,6 +11,7 @@ public class VentaConfiguracionDB
         EntidadBaseConfiguracionBD<Venta>.SetEntityBuilder(modelBuilder);
 
         modelBuilder.Entity<Venta>().Property(e => e.Fecha).IsRequired();
-       
+        modelBuilder.Entity<Venta>().Property(e => e.GestorId).IsRequired();
+
     }
 }

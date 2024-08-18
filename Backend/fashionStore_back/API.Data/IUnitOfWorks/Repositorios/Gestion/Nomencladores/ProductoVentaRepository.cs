@@ -4,9 +4,9 @@ using API.Data.IUnitOfWorks.Interfaces.Gestion.Nomencladores;
 
 namespace API.Data.IUnitOfWorks.Repositorios.Gestion.Nomencladores
 {
-    public class VentaGestorRepository : BaseRepository<VentaGestor>, IVentaGestor
+    public class ProductoVentaRepository : BaseRepository<ProductoVenta>, IProductoVenta
     {
-        public VentaGestorRepository(ApiDbContext context) : base(context)
+        public ProductoVentaRepository(ApiDbContext context) : base(context)
         {
         }
     }

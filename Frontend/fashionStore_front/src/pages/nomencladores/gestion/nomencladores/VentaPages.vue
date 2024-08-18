@@ -30,10 +30,10 @@
 
             <template v-slot:body-cell-descripcion="props">
                 <q-td :props="props">
-                <div>
-                    {{ PonerPuntosSupensivosACampo(props.row?.descripcion, 30) }}
-                    <q-tooltip>{{ props.row?.descripcion }}</q-tooltip>
-                </div>
+                    <div>
+                        {{ PonerPuntosSupensivosACampo(props.row?.descripcion, 30) }}
+                        <q-tooltip>{{ props.row?.descripcion }}</q-tooltip>
+                    </div>
                 </q-td>
             </template>
             <template v-slot:body-cell-produccion="props">
@@ -86,135 +86,99 @@
             </header>
             <q-form @submit.prevent="Guardar()" @reset="close" ref="myForm">
                 <div class="h row q-ma-md">
-                    <q-input class="col-xs-12  col-sm-5" label="Código*" v-model="objeto.codigo" color="primary"
-                        counter maxlength="100" :rules="[onlyLetter_Number_No_White_Spaces, string, (val) =>
+                    <q-input class="col-xs-12  col-sm-5" label="Código*" v-model="objeto.codigo" color="primary" counter
+                        maxlength="100" :rules="[onlyLetter_Number_No_White_Spaces, string, (val) =>
                             (items.length > 0
                                 ? !isValorRepetido(val, 'Codigo', objeto, items)
                                 : true) || 'Ya existe un Código con ese valor',]" />
 
-                    <q-input class="col-xs-12 col-sm-6" label="Fecha y Hora*" v-model="objeto.fechaHora"
-                                color="primary" type="datetime-local"/>
+                    <q-input class="col-xs-12 col-sm-6" label="Fecha y Hora*" v-model="objeto.fecha" color="primary"
+                        type="datetime-local" />
 
-                    <q-select
-                        transition-show="flip-up"
-                        transition-hide="flip-down"
-                        class="col-xs-12 col-sm-5"
-                        v-model="objeto.gestorId"
-                        label="Gestor *"
-                        emit-value
-                        map-options
-                        :use-input="
-                            objeto.gestorId === null || objeto.gestorId === ''
-                        "
-                        option-label="descripcion"
-                        option-value="id"
-                        :options="filtradoGestor"
-                        @filter="
-                            (val, update) => {
+                    <q-select transition-show="flip-up" transition-hide="flip-down" class="col-xs-12 col-sm-5"
+                        v-model="objeto.gestorId" label="Gestor *" emit-value map-options :use-input="objeto.gestorId === null || objeto.gestorId === ''
+                            " option-label="nombre" option-value="id" :options="filtradoGestor" @filter="(val, update) => {
                                 filtradoGestor = filterOptions(
-                                val,
-                                update,
-                                filtradoGestor,
-                                'descripcion',
-                                itemsGestor
-                            );
+                                    val,
+                                    update,
+                                    filtradoGestor,
+                                    'nombre',
+                                    itemsGestor
+                                );
                             }
-                        "
-                        lazy-rules
-                        :rules="[
-                            (val) =>
-                            (val !== null && val !== '') ||
-                            'Debe seleccionar un elemento',
-                        ]"
-                        >
+                                " lazy-rules :rules="[
+                                (val) =>
+                                    (val !== null && val !== '') ||
+                                    'Debe seleccionar un elemento',
+                            ]">
                         <template v-slot:no-option>
                             <q-item>
-                            <q-item-section class="text-italic text-grey">
-                                No hay elementos disponibles
-                            </q-item-section>
+                                <q-item-section class="text-italic text-grey">
+                                    No hay elementos disponibles
+                                </q-item-section>
                             </q-item>
                         </template>
                     </q-select>
 
-                    <q-select
-                        transition-show="flip-up"
-                        transition-hide="flip-down"
-                        class="col-xs-12 col-sm-6"
-                        v-model="objetoAuxiliar.productoId"
-                        label="Producto *"
-                        emit-value
-                        map-options
-                        :use-input="
-                            objetoAuxiliar.productoId === null || objetoAuxiliar.productoId === ''
-                        "
-                        option-label="descripcion"
-                        option-value="id"
-                        :options="filtradoProducto"
-                        @filter="
-                            (val, update) => {
+                    <q-select transition-show="flip-up" transition-hide="flip-down" class="col-xs-12 col-sm-6"
+                        v-model="objetoAuxiliar.productoId" label="Producto *" emit-value map-options :use-input="objetoAuxiliar.productoId === null || objetoAuxiliar.productoId === ''
+                            " option-label="descripcion" option-value="id" :options="filtradoProducto" @filter="(val, update) => {
                                 filtradoProducto = filterOptions(
-                                val,
-                                update,
-                                filtradoProducto,
-                                'descripcion',
-                                itemsProducto
-                            );
+                                    val,
+                                    update,
+                                    filtradoProducto,
+                                    'descripcion',
+                                    itemsProducto
+                                );
                             }
-                        "
-                        lazy-rules
-                        :rules="[
-                            (val) =>
-                            (val !== null && val !== '') ||
-                            'Debe seleccionar un elemento',
-                        ]"
-                        >
+                                " lazy-rules :rules="[
+                                (val) =>
+                                    (val !== null && val !== '') ||
+                                    'Debe seleccionar un elemento',
+                            ]">
                         <template v-slot:no-option>
                             <q-item>
-                            <q-item-section class="text-italic text-grey">
-                                No hay elementos disponibles
-                            </q-item-section>
+                                <q-item-section class="text-italic text-grey">
+                                    No hay elementos disponibles
+                                </q-item-section>
                             </q-item>
                         </template>
                     </q-select>
 
                     <q-input class="col-xs-12 col-sm-5 q-mt-md" label="Cantidad *" outlined
-                            v-model="objetoAuxiliar.cantidad" type="number" :min="1"
-                             :rules="[
-                                (val) => (val === 0 || val === '0') ? 'El valor de la Cantidad no puede estar en cero' : true
-                            ]">
+                        v-model="objetoAuxiliar.cantidad" type="number" :min="1" :rules="[
+                            (val) => (val === 0 || val === '0') ? 'El valor de la Cantidad no puede estar en cero' : true
+                        ]">
                     </q-input>
                     <q-input class="col-xs-12 col-sm-6 q-mt-md" label="Precio del Gestor*" outlined
-                            v-model="objetoAuxiliar.precioGestor" type="number" prefix="$" :min="0"
-                             :rules="[
-                                (val) => (val === 0 || val === '0') ? 'El valor de Precio no puede estar en cero' : true
-                            ]">
+                        v-model="objetoAuxiliar.precioGestor" type="number" prefix="$" :min="0" :rules="[
+                            (val) => (val === 0 || val === '0') ? 'El valor de Precio no puede estar en cero' : true
+                        ]">
                     </q-input>
 
 
-                       <!-- Tabla con scroll vertical -->
-                <div class="col-xs-12" style="max-height: 200px; overflow-y: auto;">
-                    <q-table
-                        :rows="itemsTablaAuxiliar"
-                        :columns="columnasTablaAuxiliar"
-                        row-key="id">
+                    <!-- Tabla con scroll vertical -->
+                    <div class="col-xs-12" style="max-height: 200px; overflow-y: auto;">
+                        <q-table :rows="itemsTablaAuxiliar" :columns="columnasTablaAuxiliar" row-key="id">
 
-                        <template v-slot:body-cell-action="props">
-                            <q-td :props="props">
-                                <div class="q-gutter-sm">
-                                    <q-btn flat dense size="sm" @click="eliminarProducto(props.row.id)" text-color="negative"
-                                        icon="delete">
-                                        <q-tooltip class="bg-red" :offset="[10, 10]" transition-show="flip-right"
-                                            transition-hide="flip-left">Eliminar</q-tooltip>
-                                    </q-btn>
-                                </div>
-                            </q-td>
-                        </template>
-                    </q-table>
-                </div>
+                            <template v-slot:body-cell-action="props">
+                                <q-td :props="props">
+                                    <div class="q-gutter-sm">
+                                        <q-btn flat dense size="sm" @click="eliminarProducto(props.row.id)"
+                                            text-color="negative" icon="delete">
+                                            <q-tooltip class="bg-red" :offset="[10, 10]" transition-show="flip-right"
+                                                transition-hide="flip-left">Eliminar</q-tooltip>
+                                        </q-btn>
+                                    </div>
+                                </q-td>
+                            </template>
+                        </q-table>
+                    </div>
 
                     <q-card-actions class="col-12 q-mt-md justify-end">
-                        <q-btn class="text-white" color="primary" aling="right" @click="guardarProducto(objetoAuxiliar.productoId)"
-                         type="button" label="Agregar producto a la lista" />
+                        <q-btn class="text-white" color="primary" aling="right"
+                            @click="guardarProducto(objetoAuxiliar.productoId)" type="button"
+                            label="Agregar producto a la lista" />
                         <q-btn class="text-white" color="primary" aling="right" type="submit" label="Guardar venta" />
                         <q-btn outline color="primary" type="reset" label="Cancelar" />
                     </q-card-actions>
@@ -226,7 +190,7 @@
 
 <script setup>
 // IMPORT LIBRERIES
-import { dataColumnVenta,dataColumnVentaAuxiliar } from "src/assets/js/column_data/columnDataGestion";
+import { dataColumnVenta, dataColumnVentaAuxiliar } from "src/assets/js/column_data/columnDataGestion";
 import {
     loadGet,
     saveData,
@@ -236,7 +200,7 @@ import {
     closeDialog,
     filterOptions,
 } from 'src/assets/js/util/funciones'
-import {PonerPuntosSupensivosACampo} from 'src/assets/js/util/extras'
+import { PonerPuntosSupensivosACampo } from 'src/assets/js/util/extras'
 import { onlyLetter_Number, onlyLetter_Number_No_White_Spaces, string } from 'src/assets/js/util/validator_form'
 import { Error } from "src/assets/js/util/notify";
 import { Error_Notify_DelecteObject } from "src/assets/js/util/dicc_notify";
@@ -262,6 +226,8 @@ const columnasTablaAuxiliar = dataColumnVentaAuxiliar;
 const filter = ref("");
 const items = ref([]);
 
+
+
 // DIALOGS VAR
 const dialog = ref(false)
 const dialogLoad = ref(false)
@@ -277,17 +243,17 @@ const idElementoSeleccionado = ref('')
 const objetoInicial = {
     fecha: null,
     gestorId: null,
-    productoId:null,
-    cantidad:1,
-    precioGestor:0,
+    productoId: null,
+    cantidad: 1,
+    precioGestor: 0,
 }
 
 const objetoAuxiliarInicial = {
-    id:null,
-    productoId:null,
-    productoNombre:null,
-    cantidad:1,
-    precioGestor:0,
+    id: null,
+    productoId: null,
+    productoNombre: null,
+    cantidad: 1,
+    precioGestor: 0,
 }
 
 // Crear una copia del objeto inicial
@@ -300,14 +266,14 @@ const objetoAuxiliar = reactive({ ...objetoAuxiliarInicial })
  **************************************************************************************************/
 const itemsGestor = ref([])
 const filtradoGestor = ref([])
-//const itemsProducto = ref([])
+const itemsProducto = ref([])
 const filtradoProducto = ref([])
 
-const itemsProducto = ref([
+/*const itemsProducto = ref([
   { id: 1, descripcion: 'Producto 1'},
   { id: 2, descripcion: 'Producto 2' },
   { id: 3, descripcion: 'Producto 3' },
-]);
+]);*/
 
 
 
@@ -330,6 +296,9 @@ onMounted(async () => {
     dialogLoad.value = true;
     // Se llena el listado de la pagina
     items.value = (await loadGet('Venta/ObtenerListadoPaginado')) ?? []; // Condicion para en caso de error la tabla no de error ya q la api devulve undefined
+    itemsGestor.value = (await loadGet('Gestor/ObtenerListadoPaginado')) ?? []; // Condicion para en caso de error la tabla no de error ya q la api devulve undefined
+    itemsProducto.value = (await loadGet('Producto/ObtenerListadoPaginado')) ?? []; // Condicion para en caso de error la tabla no de error ya q la api devulve undefined
+    console.log(itemsGestor)
 
     dialogLoad.value = false;
 });
@@ -346,7 +315,9 @@ const Guardar = () => {
 
 // Funcion para Obtener los datos para editar
 const obtenerElementoPorId = async (id) => {
-    filtradoProducto.value=itemsProducto.value
+    filtradoProducto.value = itemsProducto.value
+    filtradoGestor.value = itemsGestor.value
+    //filtradoProducto.value=itemsProducto.value
     await obtener('Venta/ObtenerPorId', id, objeto, dialogLoad, dialog)
 }
 
@@ -374,6 +345,8 @@ const abrirDialogoEliminar = (id) => {
 // 2- Funcion para pasar por parametro el arreglo de los elmentos de la tabla
 const load = async () => {
     items.value = await loadGet('Venta/ObtenerListadoPaginado')
+    //itemsGestor.value = await loadGet('Gestor/ObtenerListadoPaginado')
+    // itemsProducto.value = await loadGet('Producto/ObtenerListadoPaginado')
 }
 
 // Funcion para cerrar el dialog
@@ -392,14 +365,14 @@ const close = async () => {
 }*/
 
 function eliminarProducto(id) {
-  const producto = itemsTablaAuxiliar.value.find(item => item.id === id);
-  console.log("producto_eliminar: ",producto)
-  if (producto) {
-    const reinsertarProducto={ id: producto.productoId, descripcion: producto.productoNombre};
-    itemsProducto.value.push(reinsertarProducto);
-    console.log("producto_lista: ",itemsProducto)
-    itemsTablaAuxiliar.value = itemsTablaAuxiliar.value.filter(item => item.id !== id);
-  }
+    const producto = itemsTablaAuxiliar.value.find(item => item.id === id);
+    console.log("producto_eliminar: ", producto)
+    if (producto) {
+        const reinsertarProducto = { id: producto.productoId, descripcion: producto.productoNombre };
+        itemsProducto.value.push(reinsertarProducto);
+        console.log("producto_lista: ", itemsProducto)
+        itemsTablaAuxiliar.value = itemsTablaAuxiliar.value.filter(item => item.id !== id);
+    }
 }
 
 // Funcion para guardar valores en la lista auxiliar
@@ -409,17 +382,17 @@ function eliminarProducto(id) {
   }
   }*/
 
-  function guardarProducto(id) {
-  const producto = itemsProducto.value.find(item => item.id === id);
-  console.log(producto)
-  if (producto) {
-    objetoAuxiliar.id=producto.id;
-    objetoAuxiliar.productoId = producto.id;
-    objetoAuxiliar.productoNombre = producto.descripcion;
-    console.log(objetoAuxiliar)
-    itemsTablaAuxiliar.value.push({ ...objetoAuxiliar });
-   // itemsTablaAuxiliar.value.push(objetoAuxiliar);
-    itemsProducto.value = itemsProducto.value.filter(item => item.id !== id);
-  }
+function guardarProducto(id) {
+    const producto = itemsProducto.value.find(item => item.id === id);
+    console.log(producto)
+    if (producto) {
+        objetoAuxiliar.id = producto.id;
+        objetoAuxiliar.productoId = producto.id;
+        objetoAuxiliar.productoNombre = producto.descripcion;
+        console.log(objetoAuxiliar)
+        itemsTablaAuxiliar.value.push({ ...objetoAuxiliar });
+        // itemsTablaAuxiliar.value.push(objetoAuxiliar);
+        itemsProducto.value = itemsProducto.value.filter(item => item.id !== id);
+    }
 }
 </script>

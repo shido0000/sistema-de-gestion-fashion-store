@@ -31,13 +31,20 @@ namespace API.Application.Controllers.Gestion.Nomencladores
             List<Expression<Func<Producto, bool>>> filtros = new();
             if (!string.IsNullOrEmpty(inputDto.TextoBuscar))
             {
-                filtros.Add(producto => producto.Descripcion.Contains(inputDto.TextoBuscar));
+                filtros.Add(producto => producto.Descripcion.Contains(inputDto.TextoBuscar) ||
+                                        producto.EstadoProducto.Descripcion.Contains(inputDto.TextoBuscar) 
+                    
+                    );
             }
 
-            IIncludableQueryable<Producto, object> propiedadesIncluidas(IQueryable<Producto> query) => query.Include(e => e.EstadoProducto);
+           // IIncludableQueryable<Producto, object> propiedadesIncluidas(IQueryable<Producto> query) => query.Include(e => e.EstadoProducto);
 
-            return _servicioBase.ObtenerListadoPaginado(inputDto.CantidadIgnorar, inputDto.CantidadMostrar, inputDto.SecuenciaOrdenamiento, propiedadesIncluidas, filtros.ToArray());
+            return _servicioBase.ObtenerListadoPaginado(inputDto.CantidadIgnorar, inputDto.CantidadMostrar, inputDto.SecuenciaOrdenamiento, propiedadesIncluidas: query => query.Include(e => e.EstadoProducto), filtros.ToArray());
         }
+
+        protected override async Task<Producto?> ObtenerElementoPorId(Guid id)
+            => await _servicioBase.ObtenerPorId(id, propiedadesIncluidas: query => query.Include(e => e.EstadoProducto));
+
 
         /// <summary>
         /// Retorna un listado para un Select

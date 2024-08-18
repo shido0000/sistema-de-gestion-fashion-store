@@ -3,7 +3,7 @@ using API.Data.Entidades.Gestion.Nomencladores;
 
 namespace API.Application.Mapper.Gestion.Nomencladores
 {
-    public class ConversionPrecioDtoProfile : BaseProfile<Producto, ConversionPrecioDto, CrearConversionPrecioInputDto, ActualizarConversionPrecioInputDto, ListadoPaginadoConversionPrecioDto>
+    public class ConversionPrecioDtoProfile : BaseProfile<ConversionPrecio, ConversionPrecioDto, CrearConversionPrecioInputDto, ActualizarConversionPrecioInputDto, ListadoPaginadoConversionPrecioDto>
 
     {
         public ConversionPrecioDtoProfile()
@@ -13,7 +13,7 @@ namespace API.Application.Mapper.Gestion.Nomencladores
 
         public void MapConversionPrecioDto()
         {
-            CreateMap<Producto, DetallesConversionPrecioDto>()
+            CreateMap<ConversionPrecio, DetallesConversionPrecioDto>()
                 .ReverseMap();
         }
     }

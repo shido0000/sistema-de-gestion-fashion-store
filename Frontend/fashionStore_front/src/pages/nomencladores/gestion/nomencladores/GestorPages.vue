@@ -27,11 +27,27 @@
                     </q-tooltip>
                 </q-btn>
             </template>
-            <template v-slot:body-cell-descripcion="props">
+            <template v-slot:body-cell-nombre="props">
                 <q-td :props="props">
                     <div>
-                        {{ PonerPuntosSupensivosACampo(props.row?.descripcion, 30) }}
-                        <q-tooltip>{{ props.row?.descripcion }}</q-tooltip>
+                        {{ PonerPuntosSupensivosACampo(props.row?.nombre, 30) }}
+                        <q-tooltip>{{ props.row?.nombre }}</q-tooltip>
+                    </div>
+                </q-td>
+            </template>
+            <template v-slot:body-cell-apellido="props">
+                <q-td :props="props">
+                    <div>
+                        {{ PonerPuntosSupensivosACampo(props.row?.apellidos, 30) }}
+                        <q-tooltip>{{ props.row?.apellidos }}</q-tooltip>
+                    </div>
+                </q-td>
+            </template>
+            <template v-slot:body-cell-direccion="props">
+                <q-td :props="props">
+                    <div>
+                        {{ PonerPuntosSupensivosACampo(props.row?.direccion, 30) }}
+                        <q-tooltip>{{ props.row?.direccion }}</q-tooltip>
                     </div>
                 </q-td>
             </template>
@@ -74,17 +90,19 @@
             </header>
             <q-form @submit.prevent="Guardar()" @reset="close" ref="myForm">
                 <div class="h row q-ma-md">
-                    <q-input class="col-xs-12 col-md-5" label="Nombre*" v-model="objeto.nombre" color="primary" counter
-                        maxlength="100" :rules="[onlyLetter_Number, string]" />
+                    <q-input class="col-xs-12 col-md-5" label="Nombre *" v-model="objeto.nombre" color="primary" counter
+                        maxlength="100" :rules="[onlyLettersAndSpaces, string]" />
 
-                        <q-input class="col-xs-12 col-md-6" label="Apellidos*" v-model="objeto.apellido" color="primary" counter
-                        maxlength="100" :rules="[onlyLetter_Number, string]" />
+                        <q-input class="col-xs-12 col-md-6" label="Apellidos *" v-model="objeto.apellidos" color="primary" counter
+                        maxlength="100" :rules="[onlyLettersAndSpaces, string]" />
 
-                        <q-input class="col-xs-12 col-md-5" label="Dirección*" v-model="objeto.direccion" color="primary" counter
+                        <q-input class="col-xs-12 col-md-5" label="Dirección *" v-model="objeto.direccion" color="primary" counter
                         maxlength="255" :rules="[onlyLetter_Number, string]" />
 
-                        <q-input class="col-xs-12 col-md-6" label="Teléfono*" v-model="objeto.telefono" color="primary" counter
-                        maxlength="100" :rules="[onlyLetter_Number, string]" />
+                        <q-input class="col-xs-12 col-md-6" label="Teléfono *" v-model="objeto.telefono" color="primary" counter
+                        maxlength="8" :rules="[string,
+                            val => validarSoloNumeros(val) || 'Solo puede insertar números'
+                        ]" />
 
                     <q-card-actions class="col-12 q-mt-md justify-end">
                         <q-btn class="text-white" color="primary" aling="right" type="submit" label="Guardar" />
@@ -106,9 +124,10 @@ import {
     eliminarElemento,
     obtener,
     closeDialog,
+    validarSoloNumeros,
 } from 'src/assets/js/util/funciones'
 import { PonerPuntosSupensivosACampo } from 'src/assets/js/util/extras'
-import { onlyLetter_Number, string, onlyLetter_Number_No_White_Spaces } from 'src/assets/js/util/validator_form'
+import { onlyLetter_Number, string, onlyLetter_Number_No_White_Spaces,onlyLettersAndSpaces } from 'src/assets/js/util/validator_form'
 import { Error } from "src/assets/js/util/notify";
 import { Error_Notify_DelecteObject } from "src/assets/js/util/dicc_notify";
 
@@ -146,7 +165,7 @@ const idElementoSeleccionado = ref('')
  **************************************************************************************************/
 const objetoInicial = {
     nombre: null,
-    apellido: null,
+    apellidos: null,
     direccion: null,
     telefono: null
 }
@@ -165,7 +184,7 @@ const objeto = reactive({ ...objetoInicial })
 onMounted(async () => {
     dialogLoad.value = true;
     // Se llena el listado de la pagina
-    items.value = (await loadGet('EstadoProducto/ObtenerListadoPaginado')) ?? []; // Condicion para en caso de error la tabla no de error ya q la api devulve undefined
+    items.value = (await loadGet('Gestor/ObtenerListadoPaginado')) ?? []; // Condicion para en caso de error la tabla no de error ya q la api devulve undefined
     dialogLoad.value = false;
 });
 
@@ -174,19 +193,19 @@ onMounted(async () => {
 // Filtrado
 // 1- Funcion para pasar parametros en el Adicionar SaveData
 const Guardar = () => {
-    const url = objeto.id ? 'EstadoProducto/Actualizar' : 'EstadoProducto/Crear'
+    const url = objeto.id ? 'Gestor/Actualizar' : 'Gestor/Crear'
     saveData(url, objeto, load, close, dialogLoad)
 }
 
 // Funcion para Obtener los datos para editar
 const obtenerElementoPorId = async (id) => {
-    await obtener('EstadoProducto/ObtenerPorId', id, objeto, dialogLoad, dialog)
+    await obtener('Gestor/ObtenerPorId', id, objeto, dialogLoad, dialog)
 }
 
 // Funcion para eliminar elemento
 const eliminar = async () => {
     await eliminarElemento(
-        'EstadoProducto/Eliminar',
+        'Gestor/Eliminar',
         idElementoSeleccionado.value,
         load,
         dialogLoad
@@ -206,7 +225,7 @@ const abrirDialogoEliminar = (id) => {
 
 // 2- Funcion para pasar por parametro el arreglo de los elmentos de la tabla
 const load = async () => {
-    items.value = await loadGet('EstadoProducto/ObtenerListadoPaginado')
+    items.value = await loadGet('Gestor/ObtenerListadoPaginado')
 }
 
 // Funcion para cerrar el dialog

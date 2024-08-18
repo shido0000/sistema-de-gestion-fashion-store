@@ -18,7 +18,7 @@ namespace API.Domain.Validators.Gestion.Nomencladores
             RuleFor(m => m.Descripcion).NotEmpty().WithMessage("No puede ser un texto vacio.")
                                  .MaximumLength(100).WithMessage("Debe tener {MaxLength} caracteres máximo.")
                                  .NotNull().WithMessage("Es un campo obligatorio.");
-            RuleFor(m => m.valorCambio).NotNull().WithMessage("Es un campo obligatorio.");
+            RuleFor(m => m.ValorCambio).NotNull().WithMessage("Es un campo obligatorio.");
 
 
             RuleFor(m => m).MustAsync(async (conversionPrecio, cancelacion) => !(await _repositorios.BasicRepository.AnyAsync(e => e.Descripcion == conversionPrecio.Descripcion && e.Id != conversionPrecio.Id)))

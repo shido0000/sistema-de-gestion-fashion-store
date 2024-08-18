@@ -194,11 +194,10 @@ namespace API.Application.IoC
             services.AddScoped<IEstadoProductoService, EstadoProductoService>();
             services.AddScoped<IProductoService, ProductoService>();
             services.AddScoped<IGestorService, GestorService>();
-            services.AddScoped<IProductoGestorService, ProductoGestorService>();
+            services.AddScoped<IProductoVentaService, ProductoVentaService>();
             services.AddScoped<IVentaService, VentaService>();
             services.AddScoped<IValeDeVentaService, ValeDeVentaService>();
-            services.AddScoped<IVentaGestorService, VentaGestorService>();
-
+            
 
 
 

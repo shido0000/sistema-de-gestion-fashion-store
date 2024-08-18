@@ -12,6 +12,6 @@
         public required Guid EstadoProductoId { get; set; }
         public required EstadoProducto EstadoProducto { get; set; }
 
-        public List<ProductoGestor> ProductosGestores { get; set; } = new();
+        public List<ProductoVenta> ProductosVentas { get; set; } = new();
     }
 }

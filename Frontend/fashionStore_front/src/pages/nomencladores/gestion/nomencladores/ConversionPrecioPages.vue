@@ -74,11 +74,47 @@
             </header>
             <q-form @submit.prevent="Guardar()" @reset="close" ref="myForm">
                 <div class="h row q-ma-md">
-                    <q-input class="col-xs-12 col-md-5" label="Descripción *" v-model="objeto.descripcion" color="primary" counter
-                        maxlength="255" :rules="[onlyLetter_Number, string, (val) =>
-                            (items.length > 0
-                                ? !isValorRepetido(val, 'descripcion', objeto, items)
-                                : true) || 'Ya existe una descripción  con ese valor',]" />
+                <q-select
+                        :disable="!!objeto.id"
+                        transition-show="flip-up"
+                        transition-hide="flip-down"
+                        class="col-xs-12 col-sm-5"
+                        v-model="objeto.descripcion"
+                        label="Moneda *"
+                        emit-value
+                        map-options
+                        :use-input="
+                            objeto.descripcion === null || objeto.descripcion === ''
+                        "
+                        option-label="name"
+                        option-value="name"
+                        :options="filtradoMoneda"
+                        @filter="
+                            (val, update) => {
+                                filtradoMoneda = filterOptions(
+                                val,
+                                update,
+                                filtradoMoneda,
+                                'name',
+                                itemsMonedas
+                            );
+                            }
+                        "
+                        lazy-rules
+                        :rules="[
+                            (val) =>
+                            (val !== null && val !== '') ||
+                            'Debe seleccionar un elemento',
+                        ]"
+                        >
+                        <template v-slot:no-option>
+                            <q-item>
+                            <q-item-section class="text-italic text-grey">
+                                No hay elementos disponibles
+                            </q-item-section>
+                            </q-item>
+                        </template>
+                    </q-select>
 
                     <q-input class="col-xs-12 col-md-6" label="Valor *"  outlined
                             v-model.number="objeto.valorCambio" type="number" prefix="$" :min="0"
@@ -107,6 +143,7 @@ import {
     eliminarElemento,
     obtener,
     closeDialog,
+    filterOptions,
 } from 'src/assets/js/util/funciones'
 import { PonerPuntosSupensivosACampo } from 'src/assets/js/util/extras'
 import { onlyLetter_Number, string, onlyLetter_Number_No_White_Spaces } from 'src/assets/js/util/validator_form'
@@ -118,7 +155,7 @@ import DialogLoad from 'src/components/dialog_boxes/DialogLoad.vue'
 import DialogEliminar from 'src/components/dialog_boxes/DialogEliminar.vue'
 
 // IMPORT HOOKS
-import { ref, onMounted, reactive } from "vue";
+import { ref, onMounted, reactive, computed } from "vue";
 import { useRouter } from "vue-router";
 
 /***************************************************************************************************
@@ -153,6 +190,22 @@ const objetoInicial = {
 // Crear una copia del objeto inicial
 const objeto = reactive({ ...objetoInicial })
 
+/***************************************************************************************************
+ *                                         LISTAS                                                  *
+ **************************************************************************************************/
+const filtradoMoneda = ref([])
+const itemsMonedas = ref([
+  { id: 1 ,name: 'US Dollar', code: 'USD' },
+  { id: 2 , name: 'Euro', code: 'EUR' },
+  { id: 3 ,name: 'Japanese Yen', code: 'JPY' },
+  { id: 4 ,name: 'British Pound', code: 'GBP' },
+  { id: 5 ,name: 'Australian Dollar', code: 'AUD' },
+  { id: 6 ,name: 'Canadian Dollar', code: 'CAD' },
+  { id: 7 ,name: 'Swiss Franc', code: 'CHF' },
+  { id: 8 ,name: 'Chinese Yuan Renminbi', code: 'CNY' },
+  { id: 9 ,name: 'Swedish Krona', code: 'SEK' },
+  { id: 10 ,name: 'New Zealand Dollar', code: 'NZD' }
+]);
 
 /***************************************************************************************************
 *                                      FUNCIONES                                                   *
@@ -165,6 +218,7 @@ onMounted(async () => {
     dialogLoad.value = true;
     // Se llena el listado de la pagina
     items.value = (await loadGet('ConversionPrecio/ObtenerListadoPaginado')) ?? []; // Condicion para en caso de error la tabla no de error ya q la api devulve undefined
+    console.log(items)
     dialogLoad.value = false;
 });
 
@@ -179,6 +233,7 @@ const Guardar = () => {
 
 // Funcion para Obtener los datos para editar
 const obtenerElementoPorId = async (id) => {
+    filtradoMoneda.value = itemsMonedas.value
     await obtener('ConversionPrecio/ObtenerPorId', id, objeto, dialogLoad, dialog)
 }
 
@@ -217,5 +272,4 @@ const handleCloseDialog = () => {
 const close = async () => {
     closeDialog(objeto, objetoInicial, myForm, dialog)
 }
-
 </script>

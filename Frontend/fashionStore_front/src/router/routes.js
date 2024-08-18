@@ -37,14 +37,14 @@ const routes = [
                         "src/pages/nomencladores/gestion/nomencladores/ConversionPrecioPages.vue"
                     ),
             },
-            {
+           /* {
                 path: "Estado_Producto",
                 name: "EstadoProducto",
                 component: () =>
                     import(
                         "src/pages/nomencladores/gestion/nomencladores/EstadoProductoPages.vue"
                     ),
-            },
+            },*/
             {
                 path: "Producto",
                 name: "Producto",

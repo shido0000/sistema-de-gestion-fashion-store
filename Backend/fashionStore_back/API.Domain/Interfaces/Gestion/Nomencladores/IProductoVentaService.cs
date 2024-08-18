@@ -3,8 +3,8 @@ using API.Domain.Validators.Gestion.Nomencladores;
 
 namespace API.Domain.Interfaces.Gestion.Nomencladores
 {
-    public interface IProductoGestorService : IBaseService<ProductoGestor, ProductoGestorValidator>
+    public interface IProductoVentaService : IBaseService<ProductoVenta, ProductoVentaValidator>
     {
-        Task EliminarPorGestor(Guid id);
+        Task EliminarPorVenta(Guid id);
     }
 }

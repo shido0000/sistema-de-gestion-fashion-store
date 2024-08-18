@@ -7,7 +7,6 @@ namespace API.Application.Dtos.Gestion.Nomencladores.Gestor
 {
     public class DetallesGestorDto : GestorDto
     {
-        public List<ProductoDto> Productos { get; set; } = new();
-        public List<VentaDto> Ventas { get; set; } = new();
+    
     }
 }

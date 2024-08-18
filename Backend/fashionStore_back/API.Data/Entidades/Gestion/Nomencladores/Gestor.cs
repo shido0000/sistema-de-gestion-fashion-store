@@ -6,7 +6,7 @@
         public required string Apellidos { get; set; }
         public required string Direccion { get; set; }
         public required string Telefono { get; set; }
-        public List<ProductoGestor> ProductosGestores { get; set; } = new();
-        public List<VentaGestor> VentasGestores { get; set; } = new();
+      //  public List<ProductoGestor> ProductosGestores { get; set; } = new();
+        public List<Venta> Ventas { get; set; } = new();
     }
 }

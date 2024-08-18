@@ -22,11 +22,11 @@ namespace API.Data.DbContexts
         public DbSet<EstadoProducto> EstadosProductos { get; set; }
         public DbSet<Producto> Productos { get; set; }
         public DbSet<Gestor> Gestores { get; set; }
-        public DbSet<ProductoGestor> ProductosGestores { get; set; }
+        public DbSet<ProductoVenta> ProductosVentas { get; set; }
        
-        public DbSet<Venta> Ventas { get; set; }
+        public DbSet<Entidades.Gestion.Nomencladores.Venta> Ventas { get; set; }
         public DbSet<ValeDeVenta> ValesDeVentas { get; set; }
-        public DbSet<VentaGestor> VentasGestores { get; set; }
+      
 
 
 
@@ -53,12 +53,10 @@ namespace API.Data.DbContexts
             EstadoProductoConfiguracionDB.SetEntityBuilder(modelBuilder);
             ProductoConfiguracionDB.SetEntityBuilder(modelBuilder);
             GestorConfiguracionDB.SetEntityBuilder(modelBuilder);
-            ProductoGestorConfiguracionDB.SetEntityBuilder(modelBuilder);
+            ProductoVentaConfiguracionDB.SetEntityBuilder(modelBuilder);
             VentaConfiguracionDB.SetEntityBuilder(modelBuilder);
             ValeDeVentaConfiguracionDB.SetEntityBuilder(modelBuilder);
-            VentaGestorConfiguracionDB.SetEntityBuilder(modelBuilder);
             
-           
 
             // BASE
             base.OnModelCreating(modelBuilder);
