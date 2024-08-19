@@ -17,6 +17,12 @@
     // vERDE oCURO background-color: #D7EDD9;
     background-color: #eff4f0;
 }
+#authLayout {
+    color: $dark-page;
+    // VERDE CLARITO background-color: #deefdf;
+    // vERDE oCURO background-color: #D7EDD9;
+    background-color: #eff4f0;
+}
 .iq {
     white-space: nowrap;
     overflow: hidden;
@@ -47,6 +53,11 @@
     /* Asegúrate de que la tarjeta esté por encima del icono */
     box-shadow: 15px 4px 24px 0 rgba(33, 82, 115, 0.12);
     border-radius: 15px;
+}
+
+.card-login{
+    background-color: #f9fff9;
+    box-shadow: 15px 4px 24px 0 rgba(33, 82, 115, 0.12);
 }
 
 .card:hover {
@@ -103,3 +114,25 @@
     text-transform: uppercase;
     font-weight: bold;
 }
+/* Estilo global para el autocompletado */
+input:-webkit-autofill {
+    background-color: #f5f5f5 !important; /* Asegúrate de usar !important para sobreescribir estilos predeterminados */
+    color: #333 !important;
+  }
+  
+  input:-moz-autofill {
+    background-color: #f5f5f5 !important;
+    color: #333 !important;
+  }
+  
+  input:-ms-autofill {
+    background-color: #f5f5f5 !important;
+    color: #333 !important;
+  }
+  
+  /* Cambiar el color de selección general */
+  ::selection {
+    background: #a0d7e7; /* Color de fondo de la selección */
+    color: #000; /* Color del texto seleccionado */
+  }
+  
