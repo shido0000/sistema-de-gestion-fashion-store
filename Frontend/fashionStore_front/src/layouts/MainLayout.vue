@@ -6,8 +6,8 @@
                     <q-btn size="md" class="qqq" flat @click="drawer = !drawer" round dense icon="menu"><q-tooltip>{{
                             drawer ? "Cerrar Menú" : "Abrir Menú"
                             }}</q-tooltip></q-btn>
-                    <q-toolbar-title class="text-subtitle6 text-white">
-                        ZUN PMS</q-toolbar-title>
+                     <q-toolbar-title class="text-subtitle6 text-white">
+                        <em>Fashion Store</em></q-toolbar-title>
                 </div>
                 <q-space />
                 <q-btn class="q-mr-xl" flat round dense icon="logout" @click="logout">
@@ -43,7 +43,7 @@ const router = useRouter();
 
 function logout() {
   // Aquí puedes añadir la lógica para limpiar el estado de autenticación, por ejemplo, remover un token.
-  
+
   // Redirige al login
   router.push('/login');
 }
