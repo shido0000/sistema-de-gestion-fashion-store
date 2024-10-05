@@ -81,12 +81,30 @@ const routes = [
             ],
     },
 
-    // Always leave this as last one,
-    // but you can also remove it
-    {
-        path: "/:catchAll(.*)*",
-        component: () => import("src/pages/ErrorNotFound.vue"),
-    },
-];
+            // #region LOGIN
+            /*********************************************************************
+             *                          INDEX LOGIN                         *
+             *********************************************************************/
 
-export default routes;
+    {
+        path: "/",
+        redirect: "/login"  // Redirige a /login cuando el usuario accede a "/"
+      },
+      {
+        path: "/login",
+        component: () => import("src/layouts/AuthLayout.vue"),
+        children: [
+          {
+            path: "",
+            name: "Login",
+            component: () => import("pages/nomencladores/seguridad/IndexPageLogin.vue"),
+          },
+        ],
+      },
+    {
+      path: "/:catchAll(.*)*",
+      component: () => import("src/pages/ErrorNotFound.vue"),
+    },
+  ];
+
+  export default routes;
