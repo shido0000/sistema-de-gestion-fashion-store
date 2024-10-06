@@ -22,6 +22,13 @@ namespace API.Data.ConfiguracionEntidades.Seguridad
             };
             modelBuilder.Entity<Rol>().HasData(rol);
 
+            Rol rolVendedor = new()
+            {
+                Id = new Guid("C0B7E3B3-A06E-4580-B985-BB2FC4336523"),
+                Nombre = "Vendedor",
+            };
+            modelBuilder.Entity<Rol>().HasData(rolVendedor);
+
             List<Permiso> permisos = new()
             {
                 new (){ Id = new Guid("56B3924B-209B-40FB-9F31-AD75C12F4528"), Nombre = "Listar usuarios", Descripcion = "Permite ver los usuarios existentes en el sistema y sus datos." },

@@ -12,7 +12,6 @@
         public string NombreCompleto { get => $"{Nombre} {Apellidos}"; }
         public required string Username { get; set; }
         public required string Contrasenna { get; set; }
-        public required string Correo { get; set; }
         public bool DebeCambiarContrasenna { get; set; }
 
         public Rol Rol { get; set; } = null!;

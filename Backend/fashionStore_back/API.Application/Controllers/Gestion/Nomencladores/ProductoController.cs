@@ -31,7 +31,8 @@ namespace API.Application.Controllers.Gestion.Nomencladores
             List<Expression<Func<Producto, bool>>> filtros = new();
             if (!string.IsNullOrEmpty(inputDto.TextoBuscar))
             {
-                filtros.Add(producto => producto.Descripcion.Contains(inputDto.TextoBuscar) ||
+                filtros.Add(producto => producto.Codigo.Contains(inputDto.TextoBuscar) ||
+                                        producto.Descripcion.Contains(inputDto.TextoBuscar) ||
                                         producto.EstadoProducto.Descripcion.Contains(inputDto.TextoBuscar) 
                     
                     );
@@ -45,27 +46,27 @@ namespace API.Application.Controllers.Gestion.Nomencladores
         protected override async Task<Producto?> ObtenerElementoPorId(Guid id)
             => await _servicioBase.ObtenerPorId(id, propiedadesIncluidas: query => query.Include(e => e.EstadoProducto));
 
-
+        /*
         /// <summary>
-        /// Retorna un listado para un Select
+        /// Obtener todos los elementos que tengan en stock
         /// </summary>
-        /// <param name="inputDto">Datos de entrada</param>
-        /// <response code="200">Completado con exito! </response>
-        /// <response code="400">Ha ocurrido un error </response>
+        /// <param name="secuenciaOrdenamiento">Secuencia de ordenamiento para ordenar el listado.
+        /// FORMATO: Campo1:(asc/desc),Campo2:(asc/desc),...</param>
+        /// <response code="200">Completado con exito!</response>
+        /// <response code="400">Ha ocurrido un error</response>
         [HttpGet("[action]")]
-        public virtual async Task<IActionResult> ObtenerSelectList([FromQuery] ObtenerSelectListInputDto inputDto)
+        public virtual async Task<IActionResult> ObtenerTodosEnStock()
         {
-            inputDto.NombreCampoTexto = typeof(Permiso).GetProperties().FirstOrDefault(e => e.Name.ToLower() == inputDto.NombreCampoTexto.ToLower())?.Name ?? string.Empty;
-            inputDto.NombreCampoValor = typeof(Permiso).GetProperties().FirstOrDefault(e => e.Name.ToLower() == inputDto.NombreCampoValor.ToLower())?.Name ?? string.Empty;
+            try
+            {
+                IEnumerable<ProductoDto> result = _mapper.Map<IEnumerable<ProductoDto>>(await _ProductoService.ObtenerTodos(propiedadesIncluidas: query => query.AllAsync(e=>(e.CantidadStock !== 0)));
 
-            if (string.IsNullOrWhiteSpace(inputDto.NombreCampoValor) || string.IsNullOrWhiteSpace(inputDto.NombreCampoTexto))
-                throw new CustomException { Status = StatusCodes.Status400BadRequest, Message = "Error en los nombres de los campos." };
-
-            IEnumerable<Producto> entities = await _ProductoService.ObtenerTodos(inputDto.SecuenciaOrdenamiento);
-
-            SelectList selectList = new(entities, inputDto.NombreCampoValor, inputDto.NombreCampoTexto, inputDto.ValorSeleccionado);
-            return Ok(new ResponseDto { Status = StatusCodes.Status200OK, Result = selectList });
-
-        }
+                return Ok(new ResponseDto { Status = StatusCodes.Status200OK, Result = result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ResponseDto { Status = StatusCodes.Status400BadRequest, ErrorMessage = ex.InnerException?.Message ?? ex.Message });
+            }
+        }*/
     }
 }

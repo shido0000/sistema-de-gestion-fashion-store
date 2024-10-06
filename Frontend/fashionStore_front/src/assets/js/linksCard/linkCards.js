@@ -22,6 +22,11 @@ export const cardsGestion = Object.freeze([
         link: "Gestor",
     },
     {
+        title: "Trabajador",
+        icon: "view_quilt",
+        link: "Trabajador",
+    },
+    {
         title: "Vale de Venta",
         icon: "view_quilt",
         link: "Vale_Venta",
@@ -30,6 +35,21 @@ export const cardsGestion = Object.freeze([
         title: "Venta",
         icon: "view_quilt",
         link: "Venta",
+    },
+    {
+        title: "Ventas Por Gestor",
+        icon: "view_quilt",
+        link: "Ventas_Por_Gestor",
+    },
+
+]);
+
+// #region PAGO
+export const cardsPago = Object.freeze([
+    {
+        title: "Ganancia gestor",
+        icon: "view_quilt",
+        link: "Ganancia_gestor",
     },
 
 ]);

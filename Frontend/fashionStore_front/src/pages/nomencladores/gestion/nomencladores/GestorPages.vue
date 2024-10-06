@@ -100,9 +100,8 @@
                         maxlength="255" :rules="[onlyLetter_Number, string]" />
 
                         <q-input class="col-xs-12 col-md-6" label="Teléfono *" v-model="objeto.telefono" color="primary" counter
-                        maxlength="8" :rules="[string,
-                            val => validarSoloNumeros(val) || 'Solo puede insertar números'
-                        ]" />
+                        mask="########"
+                        maxlength="8"   />
 
                     <q-card-actions class="col-12 q-mt-md justify-end">
                         <q-btn class="text-white" color="primary" aling="right" type="submit" label="Guardar" />
@@ -174,6 +173,18 @@ const objetoInicial = {
 const objeto = reactive({ ...objetoInicial })
 
 
+
+
+//objeto prueba
+
+
+const objeto2 = {
+    email: null,
+    codigoPostal: null,
+    fax: null,
+
+}
+const parameter = reactive({ ...objeto2 })
 /***************************************************************************************************
 *                                      FUNCIONES                                                   *
  **************************************************************************************************/
@@ -237,5 +248,4 @@ const handleCloseDialog = () => {
 const close = async () => {
     closeDialog(objeto, objetoInicial, myForm, dialog)
 }
-
 </script>

@@ -22,10 +22,7 @@ namespace API.Domain.Validators.Seguridad
             RuleFor(m => m.Apellidos).NotEmpty().WithMessage("No puede ser un texto vacio.")
                                      .MaximumLength(50).WithMessage("Debe tener {MaxLength} caracteres máximo.")
                                      .NotNull().WithMessage("Es un campo obligatorio.");
-            RuleFor(m => m.Correo).NotEmpty().WithMessage("No puede ser un texto vacio.")
-                                  .MaximumLength(50).WithMessage("Debe tener {MaxLength} caracteres máximo.")
-                                  .EmailAddress().WithMessage("Formato incorrecto.")
-                                  .NotNull().WithMessage("Es un campo obligatorio.");
+          
             RuleFor(m => m.Username).NotEmpty().WithMessage("No puede ser un texto vacio.")
                                     .MaximumLength(50).WithMessage("Debe tener {MaxLength} caracteres máximo.")
                                     .NotNull().WithMessage("Es un campo obligatorio.");

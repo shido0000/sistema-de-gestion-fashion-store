@@ -25,6 +25,7 @@ namespace API.Domain.Validators.Gestion.Nomencladores
             RuleFor(m => m.Costo).NotNull().WithMessage("Es un campo obligatorio.");
             RuleFor(m => m.PrecioUSD).NotNull().WithMessage("Es un campo obligatorio.");
             RuleFor(m => m.Cantidad).NotNull().WithMessage("Es un campo obligatorio.");
+            RuleFor(m => m.CantidadStock).NotNull().WithMessage("Es un campo obligatorio.");
             RuleFor(m => m.EstadoProductoId).NotNull().WithMessage("Es un campo obligatorio.");
 
             RuleFor(m => m).MustAsync(async (producto, cancelacion) => !(await _repositorios.BasicRepository.AnyAsync(e => e.Codigo == producto.Codigo && e.Id != producto.Id)))

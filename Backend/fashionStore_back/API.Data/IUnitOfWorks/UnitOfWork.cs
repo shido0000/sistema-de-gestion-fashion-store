@@ -2,9 +2,11 @@
 using API.Data.Entidades;
 using API.Data.IUnitOfWorks.Interfaces;
 using API.Data.IUnitOfWorks.Interfaces.Gestion.Nomencladores;
+using API.Data.IUnitOfWorks.Interfaces.Pago.Nomencladores;
 using API.Data.IUnitOfWorks.Interfaces.Seguridad;
 using API.Data.IUnitOfWorks.Repositorios;
 using API.Data.IUnitOfWorks.Repositorios.Gestion.Nomencladores;
+using API.Data.IUnitOfWorks.Repositorios.Pago.Nomencladores;
 using API.Data.IUnitOfWorks.Repositorios.Seguridad;
 
 namespace API.Data.IUnitOfWorks
@@ -29,10 +31,15 @@ namespace API.Data.IUnitOfWorks
         public IEstadoProducto EstadosProductos { get; }
         public IProducto Productos { get; }
         public IGestor Gestores { get; }
-        public IProductoVenta ProductosVentas { get; }
+        public IProductoVendido ProductosVendidos { get; }
        
         public IVenta Ventas { get; }
         public IValeDeVenta ValesDeVentas { get; }
+
+
+        //PAGO
+
+        public IPagoGestor PagosGestores { get; }
       
 
         // BASE
@@ -56,11 +63,12 @@ namespace API.Data.IUnitOfWorks
             EstadosProductos = new EstadoProductoRepository(context);
             Productos = new ProductoRepository(context);
             Gestores = new GestorRepository(context);         
-            ProductosVentas = new ProductoVentaRepository(context);
+            ProductosVendidos = new ProductoVendidoRepository(context);
             Ventas = new VentaRepository(context);
             ValesDeVentas = new ValeDeVentaRepository(context);
-             
-            
+
+            //PAGO
+            PagosGestores = new PagoGestorRepository(context);
            
 
             // BASE

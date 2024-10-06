@@ -2,6 +2,7 @@
 using API.Application.Dtos.Seguridad.Rol;
 using API.Data.Entidades.Gestion.Nomencladores;
 using API.Data.Entidades.Seguridad;
+using API.Data.IUnitOfWorks.Interfaces.Gestion.Nomencladores;
 
 namespace API.Application.Mapper.Gestion.Nomencladores
 {
@@ -18,24 +19,25 @@ namespace API.Application.Mapper.Gestion.Nomencladores
         public void MapDetallesVentaDto()
         {
             CreateMap<Venta, DetallesVentaDto>()
-            .ForMember(dto => dto.GestorDescripcion, opt => opt.MapFrom(e => e.Gestor.Nombre))
-            .ForMember(dto => dto.Productos, opt => opt.MapFrom(e => e.ProductosVentas.Select(productoVenta => productoVenta.Producto)));
+             .ForMember(dto => dto.ProductosVendidos, opt => opt.MapFrom(e => e.ProductosVendidos))
+              .ReverseMap()
+            
+            ;
         }
 
         public override void MapActualizarEntityDto()
         {
             CreateMap<Venta, ActualizarVentaInputDto>()
-                .ForMember(dto => dto.ProductosIds, opt => opt.MapFrom(e => e.ProductosVentas.Select(e => e.Id)));
+                .ForMember(dto => dto.ProductosVendidos, opt => opt.MapFrom(e => e.ProductosVendidos.Select(e => e.Id)));
             CreateMap<ActualizarVentaInputDto, Venta>()
-                .ForMember(opt => opt.ProductosVentas, dto => dto.MapFrom(e => e.ProductosIds.Select((productoId, index) => new ProductoVenta { ProductoId = productoId, VentaId = e.Id,  PrecioGestor = e.PreciosGestor[index], Cantidad = e.Cantidades[index]})));
+            .ForMember(opt => opt.ProductosVendidos, dto => dto.MapFrom(e => e.ProductosVendidos.Select(productoVendido => new ProductoVendido { GestorId = productoVendido.GestorId, ProductoId = productoVendido.ProductoId, VentaId = e.Id, PrecioGestor = productoVendido.PrecioGestor, Cantidad = productoVendido.Cantidad })));
         }
-
         public override void MapCrearEntityDto()
         {
             CreateMap<Venta, CrearVentaInputDto>()
-                .ForMember(dto => dto.ProductosIds, opt => opt.MapFrom(e => e.ProductosVentas.Select(e => e.Id)));
+            .ForMember(dto => dto.ProductosVendidos, opt => opt.MapFrom(e => e.ProductosVendidos.Select(e => e.Id)));
             CreateMap<CrearVentaInputDto, Venta>()
-                .ForMember(opt => opt.ProductosVentas, dto => dto.MapFrom(e => e.ProductosIds.Select((productoId, index) => new ProductoVenta { ProductoId = productoId, VentaId = e.Id, PrecioGestor = e.PreciosGestor[index], Cantidad = e.Cantidades[index] })));
+                .ForMember(opt => opt.ProductosVendidos, dto => dto.MapFrom(e => e.ProductosVendidos.Select(productoVendido => new ProductoVendido { GestorId = productoVendido.GestorId,  ProductoId = productoVendido.ProductoId, VentaId = e.Id, PrecioGestor = productoVendido.PrecioGestor , Cantidad = productoVendido.Cantidad })));
         }
     }
 }

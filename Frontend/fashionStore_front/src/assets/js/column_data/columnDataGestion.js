@@ -105,6 +105,13 @@ export const dataColumnProducto = Object.freeze([
         sortable: true
     },
     {
+        name: 'cantidadStock',
+        align: 'center',
+        label: 'Stock',
+        field: 'cantidadStock',
+        sortable: true
+    },
+    {
         name: 'estadoProducto',
         align: 'center',
         label: 'Estado del Producto',
@@ -155,6 +162,43 @@ export const dataColumnGestor = Object.freeze([
         field: 'telefono',
         sortable: true
     },
+    {
+        name: 'action',
+        align: 'center',
+        label: 'Acciones',
+        field: 'action',
+        sortable: true
+    }
+])
+
+// #region TRABAJADOR
+/*********************************************************************
+*                TRABAJADOR COLUMN DATA                     *
+*********************************************************************/
+
+export const dataColumnTrabajador = Object.freeze([
+    {
+        name: 'nombre',
+        align: 'center',
+        label: 'Nombre',
+        field: 'nombre',
+        sortable: true
+    },
+    {
+        name: 'apellido',
+        align: 'center',
+        label: 'Apellidos',
+        field: 'apellidos',
+        sortable: true
+    },
+    {
+        name: 'username',
+        align: 'center',
+        label: 'Usuario',
+        field: 'username',
+        sortable: true
+    },
+
     {
         name: 'action',
         align: 'center',
@@ -263,17 +307,17 @@ export const dataColumnVenta = Object.freeze([
         sortable: true
     },
     {
+        name: 'codigo',
+        align: 'center',
+        label: 'Código',
+        field: 'codigo',
+        sortable: true
+    },
+    {
         name: 'gestor',
         align: 'center',
         label: 'Gestor',
         field: 'gestor',
-        sortable: true
-    },
-    {
-        name: 'producto',
-        align: 'center',
-        label: 'Producto',
-        field: 'producto',
         sortable: true
     },
     {
@@ -300,10 +344,73 @@ export const dataColumnVentaAuxiliar = Object.freeze([
         sortable: true
     },
     {
+        name: 'cantidad',
+        align: 'center',
+        label: 'Cantidad',
+        field: 'cantidad',
+        sortable: true
+    },
+    {
         name: 'precioGestor',
         align: 'center',
         label: 'Precio del Gestor',
         field: 'precioGestor',
+        sortable: true
+    },
+    {
+        name: 'precioGestorTotal',
+        align: 'center',
+        label: 'Precio Total',
+        field: 'precioGestorTotal',
+        sortable: true
+    },
+    {
+        name: 'action',
+        align: 'center',
+        label: 'Acciones',
+        field: 'action',
+        sortable: true
+    }
+])
+
+// #region VENTA POR GESTOR
+/*********************************************************************
+*                VENTA POR GESTOR COLUMN DATA                     *
+*********************************************************************/
+export const dataColumnVentaPorGestor = Object.freeze([
+    {
+        name: 'codigo',
+        align: 'center',
+        label: 'Gestor',
+        field: 'gestor',
+        sortable: true
+    },
+    {
+        name: 'venta',
+        align: 'center',
+        label: 'Venta',
+        field: 'venta',
+        sortable: true
+    },
+    {
+        name: 'producto',
+        align: 'center',
+        label: 'Producto',
+        field: 'producto',
+        sortable: true
+    },
+    {
+        name: 'precioGestor',
+        align: 'center',
+        label: 'Precio del Gestor',
+        field: 'precioGestor',
+        sortable: true
+    },
+    {
+        name: 'cantidad',
+        align: 'center',
+        label: 'Cantidad',
+        field: 'cantidad',
         sortable: true
     },
     {

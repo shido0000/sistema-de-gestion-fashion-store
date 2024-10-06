@@ -5,6 +5,18 @@ namespace API.Application.Mapper.Seguridad
 {
     public class UsuarioDtoProfile : BaseProfile<Usuario, UsuarioDto, CrearUsuarioInputDto, ActualizarUsuarioInputDto, ListadoPaginadoUsuarioDto>
     {
+        /* public UsuarioDtoProfile()
+         {
+             MapDetallesUsuarioDto();
+         }
+
+         public void MapDetallesUsuarioDto()
+         {
+             CreateMap<Usuario, DetallesUsuarioDto>()
+                  .ForMember(dto => dto.Rol, opt => opt.MapFrom(e => e.Rol.Nombre))
+                  .ReverseMap();
+         }*/
+
         public UsuarioDtoProfile()
         {
             MapDetallesUsuarioDto();
@@ -14,6 +26,7 @@ namespace API.Application.Mapper.Seguridad
         {
             CreateMap<Usuario, DetallesUsuarioDto>()
                  .ForMember(dto => dto.Rol, opt => opt.MapFrom(e => e.Rol.Nombre))
+                 .ForMember(dto => dto.RolDescripcion, opt => opt.MapFrom(e => e.Rol.Nombre))
                  .ReverseMap();
         }
     }

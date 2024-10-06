@@ -5,7 +5,7 @@
             <q-breadcrumbs-el label="Nomencladores" icon="dashboard" @click="router.push('/gestion')" />
             <q-breadcrumbs-el label="ConversionPrecio" />
         </q-breadcrumbs>
-        <q-table class="q-pa-md" :filter="filter" title="Útiles" :rows="items" :columns="columns"
+        <q-table class="q-pa-md" :filter="filter" title="Útiles" :rows="transformedItems" :columns="columns"
             row-key="id" no-data-label="No hay elementos disponibles" no-results-label="No hay elementos disponibles"
             loading-label="Cargando..." rows-per-page-label="Filas por página">
             <template v-slot:top>
@@ -74,53 +74,37 @@
             </header>
             <q-form @submit.prevent="Guardar()" @reset="close" ref="myForm">
                 <div class="h row q-ma-md">
-                <q-select
-                        :disable="!!objeto.id"
-                        transition-show="flip-up"
-                        transition-hide="flip-down"
-                        class="col-xs-12 col-sm-5"
-                        v-model="objeto.descripcion"
-                        label="Moneda *"
-                        emit-value
-                        map-options
-                        :use-input="
-                            objeto.descripcion === null || objeto.descripcion === ''
-                        "
-                        option-label="name"
-                        option-value="name"
-                        :options="filtradoMoneda"
-                        @filter="
-                            (val, update) => {
+                    <q-select :disable="!!objeto.id" transition-show="flip-up" transition-hide="flip-down"
+                        class="col-xs-5 col-sm-5" v-model="objeto.descripcion" label="Moneda *" emit-value map-options
+                        :use-input="objeto.descripcion === null || objeto.descripcion === ''
+                            " option-label="name" option-value="name" :options="filtradoMoneda" @filter="(val, update) => {
                                 filtradoMoneda = filterOptions(
-                                val,
-                                update,
-                                filtradoMoneda,
-                                'name',
-                                itemsMonedas
-                            );
+                                    val,
+                                    update,
+                                    filtradoMoneda,
+                                    'name',
+                                    itemsMonedas
+                                );
                             }
-                        "
-                        lazy-rules
-                        :rules="[
+                            " lazy-rules :rules="[
                             (val) =>
-                            (val !== null && val !== '') ||
-                            'Debe seleccionar un elemento',
-                        ]"
-                        >
+                                (val !== null && val !== '') ||
+                                'Debe seleccionar un elemento',
+                        ]">
                         <template v-slot:no-option>
                             <q-item>
-                            <q-item-section class="text-italic text-grey">
-                                No hay elementos disponibles
-                            </q-item-section>
+                                <q-item-section class="text-italic text-grey">
+                                    No hay elementos disponibles
+                                </q-item-section>
                             </q-item>
                         </template>
                     </q-select>
 
-                    <q-input class="col-xs-12 col-md-6" label="Valor *"  outlined
-                            v-model.number="objeto.valorCambio" type="number" prefix="$" :min="0"
-                            :rules="[
-                                (val) => (objeto.valorCambio && val === 0) ? 'El valor no puede estar en cero' : true
-                            ]">
+                    <q-input class="col-xs-6 col-md-6" label="Valor *" outlined v-model="objeto.valorCambio"
+                        @keypress="(event) => validarSpinnerGenerico(event, objeto.valorCambio, '0-9', 4, false)"
+                        fill-mask="0" reverse-fill-mask prefix="$" :min="0" :rules="[
+                            (val) => (val === 0 || val === '0') ? 'El valor no puede estar en cero' : true
+                        ]">
                     </q-input>
 
                     <q-card-actions class="col-12 q-mt-md justify-end">
@@ -144,6 +128,7 @@ import {
     obtener,
     closeDialog,
     filterOptions,
+    validarSpinnerGenerico,
 } from 'src/assets/js/util/funciones'
 import { PonerPuntosSupensivosACampo } from 'src/assets/js/util/extras'
 import { onlyLetter_Number, string, onlyLetter_Number_No_White_Spaces } from 'src/assets/js/util/validator_form'
@@ -195,16 +180,16 @@ const objeto = reactive({ ...objetoInicial })
  **************************************************************************************************/
 const filtradoMoneda = ref([])
 const itemsMonedas = ref([
-  { id: 1 ,name: 'US Dollar', code: 'USD' },
-  { id: 2 , name: 'Euro', code: 'EUR' },
-  { id: 3 ,name: 'Japanese Yen', code: 'JPY' },
-  { id: 4 ,name: 'British Pound', code: 'GBP' },
-  { id: 5 ,name: 'Australian Dollar', code: 'AUD' },
-  { id: 6 ,name: 'Canadian Dollar', code: 'CAD' },
-  { id: 7 ,name: 'Swiss Franc', code: 'CHF' },
-  { id: 8 ,name: 'Chinese Yuan Renminbi', code: 'CNY' },
-  { id: 9 ,name: 'Swedish Krona', code: 'SEK' },
-  { id: 10 ,name: 'New Zealand Dollar', code: 'NZD' }
+    { id: 1, name: 'US Dollar', code: 'USD' },
+    { id: 2, name: 'Euro', code: 'EUR' },
+    { id: 3, name: 'Japanese Yen', code: 'JPY' },
+    { id: 4, name: 'British Pound', code: 'GBP' },
+    { id: 5, name: 'Australian Dollar', code: 'AUD' },
+    { id: 6, name: 'Canadian Dollar', code: 'CAD' },
+    { id: 7, name: 'Swiss Franc', code: 'CHF' },
+    { id: 8, name: 'Chinese Yuan Renminbi', code: 'CNY' },
+    { id: 9, name: 'Swedish Krona', code: 'SEK' },
+    { id: 10, name: 'New Zealand Dollar', code: 'NZD' }
 ]);
 
 /***************************************************************************************************
@@ -220,25 +205,33 @@ onMounted(async () => {
     items.value = (await loadGet('ConversionPrecio/ObtenerListadoPaginado')) ?? []; // Condicion para en caso de error la tabla no de error ya q la api devulve undefined
     console.log(items)
     dialogLoad.value = false;
+
+    // Filtrar las monedas que no están en la lista items
+    itemsMonedas.value = itemsMonedas.value.filter(moneda => !items.value.some(item => item.descripcion === moneda.name))
 });
 
 // EXTRAS
 
 // Filtrado
 // 1- Funcion para pasar parametros en el Adicionar SaveData
-const Guardar = () => {
+const Guardar = async () => {
     const url = objeto.id ? 'ConversionPrecio/Actualizar' : 'ConversionPrecio/Crear'
-    saveData(url, objeto, load, close, dialogLoad)
+
+    console.log("objeto: ", objeto)
+    await saveData(url, objeto, load, close, dialogLoad)
+    itemsMonedas.value = itemsMonedas.value.filter(moneda => !items.value.some(item => item.descripcion === moneda.name))
 }
 
 // Funcion para Obtener los datos para editar
 const obtenerElementoPorId = async (id) => {
     filtradoMoneda.value = itemsMonedas.value
     await obtener('ConversionPrecio/ObtenerPorId', id, objeto, dialogLoad, dialog)
+    itemsMonedas.value = itemsMonedas.value.filter(moneda => !items.value.some(item => item.descripcion === moneda.name))
 }
 
 // Funcion para eliminar elemento
 const eliminar = async () => {
+    itemsMonedas.value = itemsMonedas.value.filter(moneda => !items.value.some(item => item.descripcion === moneda.name))
     await eliminarElemento(
         'ConversionPrecio/Eliminar',
         idElementoSeleccionado.value,
@@ -250,6 +243,8 @@ const eliminar = async () => {
         }).catch(async (error) => {
             Error(Error_Notify_DelecteObject)
         })
+
+    itemsMonedas.value = itemsMonedas.value.filter(moneda => !items.value.some(item => item.descripcion === moneda.name))
 }
 
 // Funcion para abrir el dialog de eliminar y pasar el id del elemento
@@ -261,15 +256,30 @@ const abrirDialogoEliminar = (id) => {
 // 2- Funcion para pasar por parametro el arreglo de los elmentos de la tabla
 const load = async () => {
     items.value = await loadGet('ConversionPrecio/ObtenerListadoPaginado')
+    itemsMonedas.value = itemsMonedas.value.filter(moneda => !items.value.some(item => item.descripcion === moneda.name))
 }
 
 // Funcion para cerrar el dialog
 const handleCloseDialog = () => {
     isDialogoEliminarAbierto.value = false
+    itemsMonedas.value = itemsMonedas.value.filter(moneda => !items.value.some(item => item.descripcion === moneda.name))
 }
 
 // Funcion para cerrar el dialog principal de Adicionar y Editar y resetear los campos del formulario
 const close = async () => {
     closeDialog(objeto, objetoInicial, myForm, dialog)
+    itemsMonedas.value = itemsMonedas.value.filter(moneda => !items.value.some(item => item.descripcion === moneda.name))
 }
+
+const transformData = (data) => {
+    return data.map(item => ({
+        id: item.id, // Incluye el id en los datos transformados
+        descripcion: item.descripcion,
+        valorCambio: item.valorCambio + " cup",
+
+        action: 'Acciones' // Puedes personalizar esto según tus necesidades
+    }))
+}
+
+const transformedItems = computed(() => transformData(items.value))
 </script>

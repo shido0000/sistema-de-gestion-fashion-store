@@ -11,9 +11,18 @@
             <template v-slot:top>
                 <div class="col-4 q-table__title">
                     <span>Productos</span>
-                    <q-input outline color="primary" flat v-model="filter" debounce="500" label="Buscar" />
+                    <q-input debounce="500" bottom-slots v-model="filtroBusqueda" label="Buscar" counter maxlength="30"
+                    :dense="dense">
+                    <q-btn round dense flat icon="search" @click="CargarBusquedaFiltro" />
+                </q-input>
                 </div>
                 <q-space />
+
+
+
+                <span>Todos</span>
+                <q-toggle class="q-mr-md" color="primary" label="Disponibles" v-model="filtroDisponibles"
+                    @update:model-value="CargarBusquedaFiltro" />
 
                 <q-btn class="bg-primary" style="width: 20px" color="primary" icon="add" @click="dialog = true">
                     <q-tooltip class="bg-primary" transition-show="flip-right" transition-hide="flip-left"
@@ -93,14 +102,14 @@
                                 : true) || 'Ya existe una descripción  con ese valor',]" />
 
                     <q-input class="col-xs-12 col-sm-5 q-mt-md" label="Costo *" outlined
-                            v-model="objeto.costo" type="number" prefix="$" :min="0"
+                            v-model="objeto.costo"   prefix="$" :min="0" mask="#.##" fill-mask="0" reverse-fill-mask
                              :rules="[
                                 (val) => (val === 0 || val === '0') ? 'El valor de Costo no puede estar en cero' : true
                             ]">
                     </q-input>
 
                     <q-input class="col-xs-12 col-sm-6 q-mt-md" label="Precio *" outlined
-                            v-model="objeto.precioUSD" type="number" prefix="$" :min="0"
+                            v-model="objeto.precioUSD" prefix="$" :min="0" mask="#.##" fill-mask="0" reverse-fill-mask
                              :rules="[
                                 (val) => (val === 0 || val === '0') ? 'El valor de Precio no puede estar en cero' : true
                             ]">
@@ -108,7 +117,7 @@
 
 
                     <q-input class="col-xs-12 col-sm-5" label="Cantidad *" outlined
-                            v-model="objeto.cantidad" type="number"  :min="1"
+                            v-model="objeto.cantidad"   mask="#" fill-mask="1" reverse-fill-mask :min="1"
                              :rules="[
                                 (val) => (val === 0 || val === '0') ? 'El valor de la Cantidad no puede estar en cero' : true
                             ]">
@@ -179,6 +188,7 @@ import {
     obtener,
     closeDialog,
     filterOptions,
+    loadListaFiltro,
 } from 'src/assets/js/util/funciones'
 import {PonerPuntosSupensivosACampo} from 'src/assets/js/util/extras'
 import { onlyLetter_Number, string } from 'src/assets/js/util/validator_form'
@@ -209,10 +219,12 @@ const items = ref([]);
 const dialog = ref(false)
 const dialogLoad = ref(false)
 const isDialogoEliminarAbierto = ref(false)
+const filtroDisponibles = ref(false)
 
 // VAR FORM
 const myForm = ref(null)
 const idElementoSeleccionado = ref('')
+const filtroBusqueda = ref('')
 
 /***************************************************************************************************
  *                                         OBJECT                                                  *
@@ -225,6 +237,7 @@ const objetoInicial = {
     precioUSD: 0,
     //imagen: null,
     cantidad: 1,
+    cantidadStock: 1,
     estadoProductoId: "1C8FCFE3-5718-4A36-BD3A-681241488A6B"
 }
 
@@ -262,7 +275,7 @@ onMounted(async () => {
 // 1- Funcion para pasar parametros en el Adicionar SaveData
 const Guardar = () => {
     const url = objeto.id ? 'Producto/Actualizar' : 'Producto/Crear'
-    console.log("objeto: ",objeto)
+    objeto.cantidadStock = objeto.cantidad
     saveData(url, objeto, load, close, dialogLoad)
 }
 
@@ -306,5 +319,37 @@ const handleCloseDialog = () => {
 // Funcion para cerrar el dialog principal de Adicionar y Editar y resetear los campos del formulario
 const close = async () => {
     closeDialog(objeto, objetoInicial, myForm, dialog)
+}
+
+// Funcion para cargar lista de busqueda por codigo o descripcion ademas del filtro seleccionado
+const CargarBusquedaFiltro = async () => {
+    //Tiene texto escrito
+    if (filtroBusqueda.value != null && filtroBusqueda.value != '') {
+        items.value = await loadListaFiltro(`Producto/ObtenerListadoPaginado?TextoBuscar=${filtroBusqueda.value}`)
+
+        //Filtra por todos
+        if (filtroDisponibles.value) {
+            const itemsAuxiliar = ref([]);
+            for (let i = 0; i < items.value.length; i++) {
+                if (items.value[i].estadoProductoDescripcion === "Disponible") {
+                    itemsAuxiliar.value.push(items.value[i])
+                }
+            }
+            items.value = []
+            items.value = [...itemsAuxiliar.value]
+         }
+    }
+
+    //No Tiene texto escrito
+     else {
+        //Filtra por todos
+        if (!filtroDisponibles.value) {
+            items.value = await loadListaFiltro('Producto/ObtenerListadoPaginado')
+        }
+        //Filtra por activos
+        else {
+            items.value = await loadListaFiltro(`Producto/ObtenerListadoPaginado?TextoBuscar=Disponible`)
+        }
+    }
 }
 </script>

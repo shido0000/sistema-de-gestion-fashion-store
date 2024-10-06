@@ -10,6 +10,7 @@ namespace API.Application.Dtos.Gestion.Nomencladores.Producto
         public required float PrecioUSD { get; set; }
         // public required int Imagen { get; set; }
         public required int Cantidad { get; set; }
+        public required int CantidadStock { get; set; }
 
         public required Guid EstadoProductoId { get; set; }
     }

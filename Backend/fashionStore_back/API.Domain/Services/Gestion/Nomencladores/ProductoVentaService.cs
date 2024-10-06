@@ -16,8 +16,8 @@ namespace API.Domain.Services.Gestion.Nomencladores
 
         public async Task EliminarPorVenta(Guid ventaId)
         {
-            var productosVentas = await _repositorios.ProductosVentas.GetAllAsync(e => e.VentaId == ventaId);
-            _repositorios.ProductosVentas.RemoveRange(productosVentas);
+       /*     var productosVentas = await _repositorios.ProductosVentas.GetAllAsync(e => e.VentaId == ventaId);
+            _repositorios.ProductosVentas.RemoveRange(productosVentas);*/
         }
     }
 }

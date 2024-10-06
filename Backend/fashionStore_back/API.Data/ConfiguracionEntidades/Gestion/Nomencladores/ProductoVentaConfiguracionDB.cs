@@ -13,8 +13,8 @@ public class ProductoVentaConfiguracionDB
 
         modelBuilder.Entity<ProductoVenta>().Property(e => e.Cantidad);
         modelBuilder.Entity<ProductoVenta>().Property(e => e.PrecioGestor);
-        modelBuilder.Entity<ProductoVenta>().HasOne(e => e.Venta).WithMany(e => e.ProductosVentas).HasForeignKey(e => e.VentaId).OnDelete(DeleteBehavior.Cascade);
-        modelBuilder.Entity<ProductoVenta>().HasOne(e => e.Producto).WithMany(e => e.ProductosVentas).HasForeignKey(e => e.ProductoId).OnDelete(DeleteBehavior.Cascade);
+       // modelBuilder.Entity<ProductoVenta>().HasOne(e => e.Venta).WithMany(e => e.ProductosVendidos).HasForeignKey(e => e.VentaId).OnDelete(DeleteBehavior.Cascade);
+      //  modelBuilder.Entity<ProductoVenta>().HasOne(e => e.Producto).WithMany(e => e.ProductosVendidos).HasForeignKey(e => e.ProductoId).OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<ProductoVenta>().HasIndex(e => new { e.VentaId, e.ProductoId }).IsUnique();
 

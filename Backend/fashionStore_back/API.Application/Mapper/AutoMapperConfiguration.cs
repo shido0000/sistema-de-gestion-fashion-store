@@ -1,4 +1,5 @@
 ﻿using API.Application.Mapper.Gestion.Nomencladores;
+using API.Application.Mapper.Pago.Nomencladores;
 using API.Application.Mapper.Seguridad;
 using AutoMapper;
 
@@ -24,6 +25,9 @@ namespace API.Application.Mapper
             cfg.AddProfile<GestorDtoProfile>();
             cfg.AddProfile<VentaDtoProfile>();
             cfg.AddProfile<ValeDeVentaDtoProfile>();
+
+            //PAGO
+            cfg.AddProfile<PagoGestorDtoProfile>();
 
 
             return cfg;

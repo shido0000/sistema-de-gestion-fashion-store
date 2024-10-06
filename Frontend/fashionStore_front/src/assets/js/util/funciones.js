@@ -19,6 +19,20 @@ const loadGet = async (endpoint) => {
                 : Error(error.response.data.mensajeError)
         })
 }
+// Funcion para cargar un solo objeto
+const loadGetOneElement = async (endpoint) => {
+    return await api
+        .get(endpoint)
+        .then((r) => {
+            console.log("R: ",r)
+            return r.data.result
+        })
+        .catch((error) => {
+            error.response === undefined
+                ? Error(error.message)
+                : Error(error.response.data.mensajeError)
+        })
+}
 // Funcion que se utiliza para cargar los datos en las opciones de los select
 const loadSelectList = async (endpoint) => {
     return await api
@@ -32,6 +46,21 @@ const loadSelectList = async (endpoint) => {
                 : Error(error.response.data.mensajeError)
         })
 }
+
+// Funcion para obtener una lista filtrada pasandole el endpoint y el arreglo
+const loadListaFiltro = async (endpoint) => {
+    return await api
+    .get(endpoint)
+    .then((r) => {
+        return r.data.result.elementos
+    })
+    .catch((error) => {
+        error.response === undefined
+            ? Error(error.message)
+            : Error(error.response.data.mensajeError)
+    })
+}
+
 // Funcion para obtener una lista pasandole el endpoint y el arreglo
 const load = async (endpoint, lista) => {
     await api
@@ -86,6 +115,34 @@ const saveData = async (endpoint, objeto, load, close, dialogLoad) => {
         })
     }
 }
+
+// Funcion para cambiar contrasenha
+const saveDataCambiarContrasenha = async (endpoint, objeto, load, close, dialogLoad) => {
+    const respuesta = reactive({
+        resultado: null,
+        mensajeError: null
+    })
+
+    dialogLoad.value = true
+
+        return await api.post(`/${endpoint}`, objeto).then(async (response) => {
+            respuesta.resultado = response
+            Success('La contraseña ha sido modificada correctamente')
+            await load()
+            await close()
+            dialogLoad.value = false
+            return respuesta
+        }).catch(async (error) => {
+            respuesta.mensajeError = error
+            console.log(error)
+            await load()
+            await close()
+            dialogLoad.value = false
+            return respuesta
+        })
+
+}
+
 // Funcion de Eliminar
 const eliminarElemento = async (endpoint, id, load, dialogLoad) => {
     const respuesta = reactive({
@@ -223,6 +280,24 @@ const validarSoloNumeros = (val) => {
     return regex.test(val)
 }
 
+// Funcion para validar spinner generico (admite propiedad,rango,cantidad de numeros a insertar)
+const validarSpinnerGenerico = (event, propiedad, rango, cantidadNumnerosInsertar, isDecimal) => {
+    const tecla = event.key
+    if(!isDecimal){
+    const regex = new RegExp(`^[${rango}]$`)
+    if (!regex.test(tecla) || propiedad.toString().length >= cantidadNumnerosInsertar) {
+      event.preventDefault()
+    }
+}
+else{
+
+    console.log("Aki stoy")
+    if ((tecla === '.' || tecla === ',') && (valor === '' || isNaN(valor.slice(-1)))) {
+        event.preventDefault();
+      }
+}
+  }
+
 export {
     saveData,
     closeDialog,
@@ -237,4 +312,8 @@ export {
     validarLetrasYCaracteresEspeciales,
     loadGet,
     loadSelectList,
+    loadGetOneElement,
+    loadListaFiltro,
+    validarSpinnerGenerico,
+    saveDataCambiarContrasenha,
 }

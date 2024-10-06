@@ -16,9 +16,11 @@ public class ProductoConfiguracionDB
         modelBuilder.Entity<Producto>().Property(e => e.PrecioUSD).IsRequired();     
         modelBuilder.Entity<Producto>().Property(e => e.Cantidad).IsRequired();     
         modelBuilder.Entity<Producto>().Property(e => e.EstadoProductoId).IsRequired();
+        modelBuilder.Entity<Producto>().Property(e => e.CantidadStock).IsRequired();
         // modelBuilder.Entity<Producto>().Property(e => e.Imagen);
 
         modelBuilder.Entity<Producto>().HasIndex(e => new { e.Codigo}).IsUnique();
         modelBuilder.Entity<Producto>().HasOne(e => e.EstadoProducto).WithMany(e => e.Productos).HasForeignKey(e => e.EstadoProductoId).OnDelete(DeleteBehavior.Restrict);
+
     }
 }

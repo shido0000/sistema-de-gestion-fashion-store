@@ -62,6 +62,14 @@ const routes = [
                     ),
             },
             {
+                path: "Trabajador",
+                name: "Trabajador",
+                component: () =>
+                    import(
+                        "src/pages/nomencladores/gestion/nomencladores/TrabajadorPages.vue"
+                    ),
+            },
+            {
                 path: "Vale_Venta",
                 name: "ValeVenta",
                 component: () =>
@@ -77,34 +85,50 @@ const routes = [
                         "src/pages/nomencladores/gestion/nomencladores/VentaPages.vue"
                     ),
             },
+            {
+                path: "Ventas_Por_Gestor",
+                name: "VentasPorGestor",
+                component: () =>
+                    import(
+                        "src/pages/nomencladores/gestion/nomencladores/VentaPorGestorPages.vue"
+                    ),
+            },
+
+             // #region PAGOS
+            /*********************************************************************
+             *                          INDEX PAGOS                         *
+             *********************************************************************/
+            {
+                path: "/Pago",
+                name: "Pago",
+                component: () =>
+                    import(
+                        "src/pages/pagos/IndexPagePago.vue"
+                    ),
+            },
+
+            /*********************************************************************
+             *                      NOMENCLADORES PAGOS                     *
+             *********************************************************************/
+
+            {
+                path: "Ganancia_gestor",
+                name: "GananciaPorGestor",
+                component: () =>
+                    import(
+                        "src/pages/pagos/registros/GananciaGestorPages.vue"
+                    ),
+            },
 
             ],
     },
 
-            // #region LOGIN
-            /*********************************************************************
-             *                          INDEX LOGIN                         *
-             *********************************************************************/
-
+    // Always leave this as last one,
+    // but you can also remove it
     {
-        path: "/",
-        redirect: "/login"  // Redirige a /login cuando el usuario accede a "/"
-      },
-      {
-        path: "/login",
-        component: () => import("src/layouts/AuthLayout.vue"),
-        children: [
-          {
-            path: "",
-            name: "Login",
-            component: () => import("pages/nomencladores/seguridad/IndexPageLogin.vue"),
-          },
-        ],
-      },
-    {
-      path: "/:catchAll(.*)*",
-      component: () => import("src/pages/ErrorNotFound.vue"),
+        path: "/:catchAll(.*)*",
+        component: () => import("src/pages/ErrorNotFound.vue"),
     },
-  ];
+];
 
-  export default routes;
+export default routes;

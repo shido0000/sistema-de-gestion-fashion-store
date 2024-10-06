@@ -1,10 +1,12 @@
-﻿namespace API.Data.Entidades.Gestion.Nomencladores
+﻿using API.Data.Entidades.Pago.Nomencladores;
+
+namespace API.Data.Entidades.Gestion.Nomencladores
 {
     public class Venta : EntidadBase
     {
+        public required string Codigo { get; set; }
         public required DateTime Fecha { get; set; }
-        public required Guid GestorId { get; set; }
-        public required Gestor Gestor { get; set; }
-        public List<ProductoVenta> ProductosVentas { get; set; } = new();
+ 
+        public List<ProductoVendido> ProductosVendidos { get; set; } = new();
     }
 }

@@ -6,9 +6,11 @@ using API.Data.IUnitOfWorks.Interfaces;
 using API.Data.IUnitOfWorks.Repositorios;
 using API.Domain.Interfaces;
 using API.Domain.Interfaces.Gestion.Nomencladores;
+using API.Domain.Interfaces.Pago.Nomencladores;
 using API.Domain.Interfaces.Seguridad;
 using API.Domain.Services;
 using API.Domain.Services.Gestion.Nomencladores;
+using API.Domain.Services.Pago.Nomencladores;
 using API.Domain.Services.Seguridad;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -194,9 +196,12 @@ namespace API.Application.IoC
             services.AddScoped<IEstadoProductoService, EstadoProductoService>();
             services.AddScoped<IProductoService, ProductoService>();
             services.AddScoped<IGestorService, GestorService>();
-            services.AddScoped<IProductoVentaService, ProductoVentaService>();
+            services.AddScoped<IProductoVendidoService, ProductoVendidoService>();
             services.AddScoped<IVentaService, VentaService>();
             services.AddScoped<IValeDeVentaService, ValeDeVentaService>();
+
+            //PAGO
+            services.AddScoped<IPagoGestorService, PagoGestorService>();
             
 
 

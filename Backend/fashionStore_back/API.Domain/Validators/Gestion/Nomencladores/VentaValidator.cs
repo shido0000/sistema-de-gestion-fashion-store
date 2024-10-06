@@ -18,9 +18,13 @@ namespace API.Domain.Validators.Gestion.Nomencladores
 
             RuleFor(m => m.Fecha).NotEmpty().WithMessage("No puede ser un texto vacio.")
                                  .NotNull().WithMessage("Es un campo obligatorio.");
-            RuleFor(m => m.GestorId).NotEmpty().WithMessage("No puede ser un texto vacio.")
-                                 .NotNull().WithMessage("Es un campo obligatorio.");
-        }
+           
+            RuleFor(m => m.Codigo).NotEmpty().WithMessage("No puede ser un texto vacio.")
+                                  .MaximumLength(100).WithMessage("Solo se admiten 100 carácteres.")
+                                  .NotNull().WithMessage("Es un campo obligatorio.");
+
+           
+    }
 
     }
 }

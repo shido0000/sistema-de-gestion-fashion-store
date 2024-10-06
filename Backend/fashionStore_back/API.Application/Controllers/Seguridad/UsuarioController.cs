@@ -3,12 +3,15 @@ using API.Application.Dtos.Seguridad.Usuario;
 using API.Application.Validadotors.Seguridad;
 using API.Data.Entidades.Seguridad;
 using API.Domain.Exceptions;
+using API.Domain.Interfaces.Gestion.Nomencladores;
 using API.Domain.Interfaces.Seguridad;
+using API.Domain.Services.Gestion.Nomencladores;
 using API.Domain.Validators.Seguridad;
 using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 using System.Web.Helpers;
 
@@ -16,9 +19,11 @@ namespace API.Application.Controllers.Seguridad
 {
     public class UsuarioController : BasicController<Usuario, UsuarioValidator, DetallesUsuarioDto, CrearUsuarioInputDto, ActualizarUsuarioInputDto, ListadoPaginadoUsuarioDto, FiltrarConfigurarListadoPaginadoUsuarioIntputDto>
     {
+        private readonly IUsuarioService _UsuarioService;
 
-        public UsuarioController(IMapper mapper, IUsuarioService servicioUsuario) : base(mapper, servicioUsuario)
+        public UsuarioController(IMapper mapper, IUsuarioService usuarioService, IUsuarioService servicioUsuario) : base(mapper, servicioUsuario)
         {
+            _UsuarioService = usuarioService;
         }
 
         /// <summary>
@@ -58,22 +63,41 @@ namespace API.Application.Controllers.Seguridad
             return Ok(new ResponseDto { Status = StatusCodes.Status200OK });
         }
 
+        /*   protected override Task<(IEnumerable<Usuario>, int)> AplicarFiltrosIncluirPropiedades(FiltrarConfigurarListadoPaginadoUsuarioIntputDto inputDto)
+           {
+               //agregando filtros
+               List<Expression<Func<Usuario, bool>>> filtros = new();
+               if (!string.IsNullOrEmpty(inputDto.TextoBuscar))
+               {
+                   filtros.Add(usuario => usuario.Nombre.Contains(inputDto.TextoBuscar) ||
+                                          usuario.Apellidos.Contains(inputDto.TextoBuscar) ||
+
+                                          usuario.Username.Contains(inputDto.TextoBuscar));
+               }
+
+               //IIncludableQueryable<Usuario, object> propiedadesIncluidas(IQueryable<Usuario> query) => query.Include(e => e.ShipmentItems);
+             //  IIncludableQueryable<Usuario, object> propiedadesIncluidas(IQueryable<Usuario> query) => query.Include(e => e.Rol);
+               return _servicioBase.ObtenerListadoPaginado(inputDto.CantidadIgnorar, inputDto.CantidadMostrar, inputDto.SecuenciaOrdenamiento, propiedadesIncluidas: query => query.Include(e => e.Rol), filtros.ToArray());
+           }*/
+
         protected override Task<(IEnumerable<Usuario>, int)> AplicarFiltrosIncluirPropiedades(FiltrarConfigurarListadoPaginadoUsuarioIntputDto inputDto)
         {
-            //agregando filtros
+            // Agregando filtros
             List<Expression<Func<Usuario, bool>>> filtros = new();
             if (!string.IsNullOrEmpty(inputDto.TextoBuscar))
             {
                 filtros.Add(usuario => usuario.Nombre.Contains(inputDto.TextoBuscar) ||
                                        usuario.Apellidos.Contains(inputDto.TextoBuscar) ||
-                                       usuario.Correo.Contains(inputDto.TextoBuscar) ||
-                                       usuario.Username.Contains(inputDto.TextoBuscar));
+                                       usuario.Username.Contains(inputDto.TextoBuscar)
+
+                                       || usuario.Rol.Nombre.Contains(inputDto.TextoBuscar)
+                                       );
             }
 
-            //IIncludableQueryable<Usuario, object> propiedadesIncluidas(IQueryable<Usuario> query) => query.Include(e => e.ShipmentItems);
-
-            return _servicioBase.ObtenerListadoPaginado(inputDto.CantidadIgnorar, inputDto.CantidadMostrar, inputDto.SecuenciaOrdenamiento, null, filtros.ToArray());
+            // Incluyendo la propiedad Rol en la consulta
+            return _servicioBase.ObtenerListadoPaginado(inputDto.CantidadIgnorar, inputDto.CantidadMostrar, inputDto.SecuenciaOrdenamiento, propiedadesIncluidas: query => query.Include(e => e.Rol), filtros.ToArray());
         }
+
 
         protected override async Task<Usuario?> ObtenerElementoPorId(Guid id)
             => await _servicioBase.ObtenerPorId(id, propiedadesIncluidas: query => query.Include(e => e.Rol));

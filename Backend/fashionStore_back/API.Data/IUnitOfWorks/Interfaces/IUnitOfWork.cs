@@ -1,5 +1,6 @@
 ﻿using API.Data.Entidades;
 using API.Data.IUnitOfWorks.Interfaces.Gestion.Nomencladores;
+using API.Data.IUnitOfWorks.Interfaces.Pago.Nomencladores;
 using API.Data.IUnitOfWorks.Interfaces.Seguridad;
 
 namespace API.Data.IUnitOfWorks.Interfaces
@@ -22,9 +23,12 @@ namespace API.Data.IUnitOfWorks.Interfaces
         IEstadoProducto EstadosProductos { get; }
         IProducto Productos { get; }
         IGestor Gestores { get; }
-        public IProductoVenta ProductosVentas { get; }
+        IProductoVendido ProductosVendidos { get; }
         IVenta Ventas { get; }
         IValeDeVenta ValesDeVentas { get; }
+
+        //PAGO
+        IPagoGestor PagosGestores { get; }
        
 
 
