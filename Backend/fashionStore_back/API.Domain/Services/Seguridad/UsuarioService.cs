@@ -76,5 +76,35 @@ namespace API.Domain.Services.Seguridad
 
         public async Task<List<Permiso>> ObtenerPermisos(string username)
             => (await _repositorios.Usuarios.FirstAsync(e => e.Username == username, query => query.Include(e => e.Rol.RolPermiso).ThenInclude(e => e.Permiso)))?.Rol.RolPermiso.Select(e => e.Permiso).ToList() ?? new();
+
+
+
+        public async Task<Usuario?> ObtenerElementoPorUsuario(string nombreUsuario)
+        {
+            return await _repositorios.Usuarios.FirstAsync(e => e.Username == nombreUsuario);
+        }
+
+        public override async Task<EntityEntry<Usuario>> Eliminar(Guid id)
+        {
+            Usuario? usuario = await ObtenerPorId(id, propiedadesIncluidas: query=>query.Include(e=>e.Rol)) ??
+              throw new CustomException() { Status = StatusCodes.Status404NotFound, Message = "Elemento no encontrado." };
+
+            if (usuario.Rol.Nombre == "Administrador") {
+                throw new CustomException() { Status = StatusCodes.Status400BadRequest, Message = "No puede eliminar al Admin." };
+            }
+
+            return await base.Eliminar(id);
+        }
+
+        public async Task<bool> EsAdministrador(Guid usuarioId) {
+            Usuario? usuario = await ObtenerPorId(usuarioId, propiedadesIncluidas: query => query.Include(e => e.Rol)) ??
+             throw new CustomException() { Status = StatusCodes.Status404NotFound, Message = "Elemento no encontrado." };
+
+            if (usuario.Rol.Nombre == "Administrador")
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

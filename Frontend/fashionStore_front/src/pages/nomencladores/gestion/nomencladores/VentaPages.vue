@@ -1,17 +1,17 @@
 <template>
     <div class="q-pa-xl">
-        <q-breadcrumbs class="qb cursor-pointer q-pb-md">
-            <q-breadcrumbs-el label="Inicio" icon="home" @click="router.push('/inicio')" />
-            <q-breadcrumbs-el label="Nomencladores" icon="dashboard" @click="router.push('/gestion')" />
+        <q-breadcrumbs class="qb cursor-pointer q-pb-md" style="color: #e1e1e1">
+            <q-breadcrumbs-el label="Inicio" icon="home" @click="router.push('/inicio')" style="color: #e1e1e1"/>
+            <q-breadcrumbs-el label="Nomencladores" icon="dashboard" @click="router.push('/gestion')" style="color: #e1e1e1"/>
             <q-breadcrumbs-el label="Venta" />
         </q-breadcrumbs>
         <q-table class="q-pa-md" :filter="filter" title="Útiles" :rows="items" :columns="columns" row-key="id"
-            no-data-label="No hay elementos disponibles" no-results-label="No hay elementos disponibles"
+        no-data-label="No hay elementos disponibles" no-results-label="No hay elementos disponibles"
             loading-label="Cargando..." rows-per-page-label="Filas por página">
             <template v-slot:top>
                 <div class="col-4 q-table__title">
                     <span>Ventas</span>
-                    <q-input bottom-slots v-model="filtroBusqueda" label="Buscar" counter maxlength="30" :dense="dense">
+                    <q-input bottom-slots v-model="filtroBusqueda" label="Buscar" counter maxlength="30" >
                         <q-btn round dense flat icon="search" @click="CargarBusquedaFiltro" />
                     </q-input>
                 </div>
@@ -20,7 +20,7 @@
 
 
 
-                <q-btn class="bg-primary" style="width: 20px" color="primary" icon="add" @click="dialog = true">
+                <q-btn class="bg-primary" style="width: 20px" color="primary" icon="add" @click="abrirDialogoInsertar()">
                     <q-tooltip class="bg-primary" transition-show="flip-right" transition-hide="flip-left"
                         :offset="[10, 10]">Adicionar</q-tooltip>
                 </q-btn>
@@ -36,17 +36,30 @@
             <template v-slot:body-cell-descripcion="props">
                 <q-td :props="props">
                     <div>
-                        {{ PonerPuntosSupensivosACampo(props.row?.descripcion, 30) }}
+                        {{ PonerPuntosSupensivosACampo(props.row?.codigo, 30) }}
                         <q-tooltip>{{ props.row?.descripcion }}</q-tooltip>
                     </div>
                 </q-td>
             </template>
-            <template v-slot:body-cell-produccion="props">
+
+            <template v-slot:body-cell-fecha="props">
                 <q-td :props="props">
-                    <q-icon name="done" v-if="props.value == 0" style="color: #bdbdbd" size="25px" />
-                    <q-icon name="done" v-else style="color: #3a7779" size="25px" />
+                    <div>
+                        {{ getFechaVentaPasandoFechaDeBaseDatos(props.row.fecha) }}
+                    </div>
                 </q-td>
             </template>
+
+
+            <template v-slot:body-cell-gestor="props">
+                <q-td :props="props">
+                    <div>
+                        {{ getGestorNombre(props.row.id) }}
+                    </div>
+                </q-td>
+            </template>
+
+
             <template v-slot:body-cell-activo="props">
                 <q-td :props="props">
                     <q-icon flat :name="(props.value == 0) ? 'highlight_off' : 'check_circle'"
@@ -80,8 +93,8 @@
 
     <!-- Add & Delete -->
     <q-dialog v-model="dialog" persistent>
-        <q-card style="width: 800px; max-width: 80vw; height: auto">
-            <header class="q-pa-sm bg-primary">
+        <q-card style="width: auto; max-width: 80vw; height: auto">
+            <header class="q-pa-sm " style="background: linear-gradient(146deg,#222222  0%, #656e6e 150%)">
                 <q-toolbar>
                     <q-toolbar-title class="text-subtitle6 text-white">
                         {{
@@ -91,26 +104,20 @@
             </header>
             <q-form @submit.prevent="Guardar()" @reset="close" ref="myForm">
                 <div class="h row q-ma-md">
-                    <q-input class="col-xs-12  col-sm-5" label="Código*" v-model="objeto.codigo" color="primary" counter
-                        maxlength="100" :rules="[onlyLetter_Number_No_White_Spaces, string, (val) =>
+
+                    <q-input class="col-xs-12  col-sm-12 col-md-6 q-pa-md" label="Código *" v-model="objeto.codigo" color="primary" counter
+                        maxlength="30" :rules="[onlyLetter_Number_No_White_Spaces, string, (val) =>
                             (items.length > 0
                                 ? !isValorRepetido(val, 'Codigo', objeto, items)
                                 : true) || 'Ya existe un Código con ese valor',]" />
 
-                    <q-input class="col-xs-12 col-sm-6" label="Fecha y Hora*" v-model="objeto.fecha" color="primary"
+                    <q-input class="col-xs-12 col-sm-12  col-md-6 q-pa-md" label="Fecha y Hora *" v-model="objeto.fecha" color="primary"
                         type="datetime-local" :rules="[string]" />
 
-                    <q-table flat class="q-mt-lg" :rows="objeto.productosVendidos" :columns="columnasTablaAuxiliar"
-                        row-key="id" no-data-label="No hay elementos disponibles"
-                        no-results-label="No hay elementos disponibles" loading-label="Cargando..."
-                        rows-per-page-label="Filas por página" :rows-per-page-options="[3]" :rows-per-page="3">
 
-
-                        <template v-slot:top>
-
-                            <q-form class="col-xs-12 " @submit.prevent="guardarProducto()" ref="myFormLista">
+                        <q-form class="col-xs-12 q-pa-md" @submit.prevent="guardarProducto()" ref="myFormLista">
                                 <div class="row q-col-gutter-lg">
-                                    <q-select class="col-xs-12 col-sm-12 col-md-3 q-py-none" :disable="disableVendedor"
+                                    <q-select class="col-xs-12 col-sm-12 col-md-6   " :disable="disableVendedor"
                                         v-model="objetoAuxiliar.gestorId" label="Gestor *" emit-value map-options
                                         :use-input="objetoAuxiliar.gestorId === null || objetoAuxiliar.gestorId === ''
                                             " option-label="nombre" option-value="id" :options="filtradoGestor"
@@ -138,17 +145,17 @@
 
 
                                     </q-select>
-                                    <q-select class="col-xs-12 col-sm-12 col-md-3 q-py-none"
+                                    <q-select class="col-xs-12 col-sm-12 col-md-6  "
                                         v-model="objetoAuxiliar.productoId"
                                         @update:model-value="cantidadStockPorProducto(objetoAuxiliar.productoId)"
                                         label="Producto *" emit-value map-options :use-input="objetoAuxiliar.productoId === null || objetoAuxiliar.productoId === ''
-                                            " option-label="descripcion" option-value="id" :options="filtradoProducto"
+                                            " option-label="codigo" option-value="id" :options="filtradoProducto"
                                         @filter="(val, update) => {
                                             filtradoProducto = filterOptions(
                                                 val,
                                                 update,
                                                 filtradoProducto,
-                                                'descripcion',
+                                                'codigo',
                                                 itemsProducto
                                             );
                                         }
@@ -157,6 +164,9 @@
                                                     (val !== null && val !== '') ||
                                                     'Debe seleccionar un elemento',
                                             ]">
+
+
+
                                         <template v-slot:no-option>
                                             <q-item>
                                                 <q-item-section class="text-italic text-grey">
@@ -168,21 +178,21 @@
 
                                     </q-select>
                                     <q-input :disable="!objetoAuxiliar.productoId"
-                                        class="col-xs-12 col-sm-5 col-md-2 q-py-none" label="Cantidad *" type="number"
+                                        class="col-xs-12 col-sm-5 col-md-6  " label="Cantidad *" type="number"
                                         v-model="objetoAuxiliar.cantidad" :min="1" :max="cantidadStockProducto" :rules="[
                                             (val) => (val === 0 || val === '0') ? 'El valor de la Cantidad no puede estar en cero' : true
                                         ]">
                                     </q-input>
-                                    <q-input class="col-xs-12 col-sm-6  col-md-2 q-py-none" label="Precio del Gestor*"
+                                    <q-input :disable="!objetoAuxiliar.productoId" class="col-xs-12 col-sm-6  col-md-4  " label="Precio del Gestor *"
                                         v-model="objetoAuxiliar.precioGestor" mask="#.##" fill-mask="0"
                                         reverse-fill-mask prefix="$" :min="0" :rules="[
                                             (val) => (val === 0 || val === '0') ? 'El valor de Precio no puede estar en cero' : true
                                         ]">
                                     </q-input>
 
-                                    <q-btn
-                                        class="bg-primary col-xs-1 col-sm-1  col-md-1 q-py-none q-px-none q-ml-md q-mt-md justify-end"
-                                        outline color="white" style="height: 2%; width: 5%; border-radius: 10%;"
+                                    <q-btn  outline
+                                        class="bg-primary col-xs-1 col-sm-1  col-md-2 q-ma-md q-py-none q-px-none q-mt-xl"
+                                          color="white" style="height: 5%; width: 5%; border-radius: 30%;"
                                         icon="save" type="submit">
                                         <q-tooltip>
                                             {{ "Guardar" }}
@@ -194,8 +204,15 @@
 
                             </q-form>
 
+                    <q-table flat class="col-xs-12 q-px-md" :rows="objeto.productosVendidos" :columns="columnasTablaAuxiliar"
+                        row-key="id" no-data-label="No hay elementos disponibles"
+                        no-results-label="No hay elementos disponibles" loading-label="Cargando..."
+                        rows-per-page-label="Filas por página" :rows-per-page-options="[3]" :rows-per-page="3">
 
-                            <div class="col-12 q-table__title">
+
+                        <template v-slot:top>
+
+                            <div class="col-12 q-table__title ">
                                 <span>Productos agregados</span>
                             </div>
                         </template>
@@ -207,9 +224,15 @@
                             </q-td>
                         </template>
 
+                        <template v-slot:body-cell-precioGestor="props">
+                <q-td :props="props">
+                    {{convertirValoresADecimal(props.row.precioGestor)}}
+                </q-td>
+            </template>
+
                         <template v-slot:body-cell-precioGestorTotal="props">
                             <q-td :props="props">
-                                {{ calcularPrecioTotal(props.row.cantidad, props.row.precioGestor) }}
+                                {{ convertirValoresADecimal(calcularPrecioTotal(props.row.cantidad, props.row.precioGestor)) }}
                             </q-td>
                         </template>
 
@@ -220,7 +243,7 @@
                                         text-color="primary" icon="edit">
                                         <q-tooltip>Editar</q-tooltip>
                                     </q-btn>-->
-                                    <q-btn flat dense size="sm" @click="eliminarProductoAgregado(props.row.id)"
+                                    <q-btn flat dense size="sm" @click="eliminarProductoAgregado(props.rowIndex)"
                                         text-color="negative" icon="delete">
                                         <q-tooltip>Eliminar datos</q-tooltip>
                                     </q-btn>
@@ -262,6 +285,7 @@ import { dataColumnVenta, dataColumnVentaAuxiliar } from "src/assets/js/column_d
 import {
     loadGet,
     saveData,
+    saveDataSinMensaje,
     isValorRepetido,
     eliminarElemento,
     obtener,
@@ -270,7 +294,7 @@ import {
     loadGetOneElement,
     loadListaFiltro,
 } from 'src/assets/js/util/funciones'
-import { PonerPuntosSupensivosACampo } from 'src/assets/js/util/extras'
+import { PonerPuntosSupensivosACampo, convertirValoresADecimal, getFechaVentaPasandoFechaDeBaseDatos } from 'src/assets/js/util/extras'
 import { onlyLetter_Number, onlyLetter_Number_No_White_Spaces, string } from 'src/assets/js/util/validator_form'
 import { Error } from "src/assets/js/util/notify";
 import { Error_Notify_DelecteObject } from "src/assets/js/util/dicc_notify";
@@ -372,6 +396,7 @@ const objetoProductoAuxiliar = reactive({ ...objetoProductoAuxiliarInicial })
 const itemsGestor = ref([])
 const filtradoGestor = ref([])
 const itemsProducto = ref([])
+const itemsProductoCompleto = ref([])
 const filtradoProducto = ref([])
 const listaPrecios = ref([])
 const listaCantidades = ref([])
@@ -395,8 +420,11 @@ onMounted(async () => {
     // Se llena el listado de la pagina
     items.value = (await loadGet('Venta/ObtenerListadoPaginado')) ?? []; // Condicion para en caso de error la tabla no de error ya q la api devulve undefined
     itemsGestor.value = (await loadGet('Gestor/ObtenerListadoPaginado')) ?? []; // Condicion para en caso de error la tabla no de error ya q la api devulve undefined
-    const itemsProductosTodos = (await loadGet('Producto/ObtenerListadoPaginado')) ?? []; // Condicion para en caso de error la tabla no de error ya q la api devulve undefined
-    productosConStock(itemsProductosTodos)
+    //const itemsProductosTodos = (await loadGet('Producto/ObtenerListadoPaginado')) ?? []; // Condicion para en caso de error la tabla no de error ya q la api devulve undefined
+
+    itemsProductoCompleto.value = (await loadGet('Producto/ObtenerListadoPaginado')) ?? []; // Condicion para en caso de error la tabla no de error ya q la api devulve undefined
+
+    productosConStock(itemsProductoCompleto.value)
     console.log("ventas: ", items)
 
     itemsProducto.value = (await loadGet('Producto/ObtenerListadoPaginado')) ?? [];
@@ -409,13 +437,22 @@ onMounted(async () => {
 
 // Filtrado
 // 1- Funcion para pasar parametros en el Adicionar SaveData
-const Guardar = () => {
+const Guardar = async () => {
     const url = objeto.id ? 'Venta/Actualizar' : 'Venta/Crear'
-    //guardarPreciosCantidadesEnListas()
-  /*  objeto.productosIds = listaProductosIds.value
-    objeto.preciosGestor = listaPrecios.value
-    objeto.cantidades = listaCantidades.value*/
+
+    await actualizarStockProductos()
     saveData(url, objeto, load, close, dialogLoad)
+}
+
+const actualizarStockProductos = async () =>{
+    const urlProducto = 'Producto/Actualizar'
+    for(let i=0;i<objeto.productosVendidos.length;i++){
+        console.log("objeto.productosVendidos[i]: ",objeto.productosVendidos[i])
+        let producto = await loadGetOneElement(`Producto/ObtenerPorId/${objeto.productosVendidos[i].productoId}`)
+        producto.cantidadStock = producto.cantidadStock-objeto.productosVendidos[i].cantidad
+
+        saveDataSinMensaje(urlProducto, producto)
+    }
 }
 
 // Funcion para Obtener los datos para editar
@@ -455,6 +492,8 @@ const handleCloseDialog = () => {
 
 // Funcion para cerrar el dialog principal de Adicionar y Editar y resetear los campos del formulario
 const close = async () => {
+    Object.assign(objetoAuxiliar, objetoAuxiliarInicial)
+    objeto.productosVendidos = []
     closeDialog(objeto, objetoInicial, myForm, dialog)
 }
 
@@ -517,7 +556,7 @@ const guardarProducto = () => {
     objetoAuxiliar.productoId = null
     objetoAuxiliar.precioGestor = 0
     objetoAuxiliar.cantidad = 0
-
+    productosConStock(itemsProductoCompleto.value)
 
 
 
@@ -542,15 +581,41 @@ watch(() => objetoAuxiliar.productoId, async (newVal) => {
     }
 })
 
-const productosConStock = (lista) => {
+/*const productosConStock = (lista) => {
+    const vendidosIds = objeto.productosVendidos.map(p => p.productoId)
     for (let i = 0; i < lista.length; i++) {
-        if (lista[i].cantidadStock !== 0) {
-            itemsProducto.value.push(lista[i])
+        const producto = lista[i]
+        if (producto.cantidadStock !== 0) {
+       // if (lista[i].cantidadStock !== 0) {
+           // itemsProducto.value.push(lista[i])
+           // Verifica si el producto no está en productosVendidos
+      if (!vendidosIds.includes(producto.id)) {
+        itemsProducto.value.push(producto);
+      }
         }
     }
-    console.log("itemsProducto: ", itemsProducto)
 
-}
+    // Agrega productos de itemsProductoCompleto que no están en productosVendidos
+  for (let i = 0; i < itemsProductoCompleto.value.length; i++) {
+    const productoCompleto = itemsProductoCompleto.value[i];
+
+    if (!vendidosIds.includes(productoCompleto.id) && !itemsProducto.value.some(p => p.id === productoCompleto.id)) {
+      itemsProducto.value.push(productoCompleto);
+    }
+  }
+    console.log("itemsProducto: ", itemsProducto)
+}*/
+
+const productosConStock = (lista) => {
+  const vendidosIds = new Set(objeto.productosVendidos.map(p => p.productoId));
+
+  itemsProducto.value = lista.filter(producto => {
+    return producto.cantidadStock !== 0 && !vendidosIds.has(producto.id);
+  });
+
+  console.log("itemsProducto: ", itemsProducto);
+};
+
 
 const validarBotonAgregarProducto = () => {
     let todoCorrecto = true
@@ -605,25 +670,28 @@ const CargarBusquedaFiltro = async () => {
 
 const getProductoDescripcion = (id) => {
     const producto = itemsProductoOficial.value.find(item => item.id === id)
-    return producto ? producto.descripcion : ''
+    return producto ? producto.codigo : ''
 }
+
+const getGestorNombre = (id) => {
+    const venta = items.value.find(item => item.id === id)
+    return venta ? venta.productosVendidos[0].gestor.nombre : ''
+}
+
+
 
 const calcularPrecioTotal = (cantidad, precioGestor) => {
     return cantidad * precioGestor
 }
 
 
-const eliminarProductoAgregado = (id) => {
-    objeto.productosVendidos = objeto.productosVendidos.filter(item => item.id !== id)
-   // itemsProducto.value = itemsProducto.value.filter(item => item.id !== producto.id)
-
-   itemsProducto.value = itemsProductoOficial.value.filter(item =>
-        !objeto.productosVendidos.some(vendido => vendido.id === item.id)
-    );
-    /* itemsMonedas.value = itemsMonedasAuxiliar.value.filter(moneda =>
-         !itemsListaAuxiliarCuentasMonedas.value.some(aux => aux.monedaId === moneda.id)
-     )*/
+const eliminarProductoAgregado = (posicion) => {
+  console.log("ID: ", posicion)
+  objeto.productosVendidos.splice(posicion, 1)
+  console.log("objeto.productosVendidos: ", objeto.productosVendidos)
+  productosConStock(itemsProductoCompleto.value)
 }
+
 
 watch(
     () => objeto.productosVendidos,
@@ -632,5 +700,19 @@ watch(
     },
     { immediate: true, deep: true }
 );
+
+const abrirDialogoInsertar = () =>{
+    objeto.productosVendidos = []
+    dialog.value = true
+}
+
+const convertirFecha = (formatoISO) =>{
+  const fecha = new Date(formatoISO);
+  const dia = String(fecha.getDate()).padStart(2, '0');
+  const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+  const anio = fecha.getFullYear();
+  return `${dia}/${mes}/${anio}`;
+}
+
 
 </script>

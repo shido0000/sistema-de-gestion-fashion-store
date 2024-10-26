@@ -6,8 +6,11 @@ namespace API.Data.IUnitOfWorks.Repositorios.Seguridad
 {
     public class UsuarioRepository : BaseRepository<Usuario>, IUsuarioRepository
     {
+        
         public UsuarioRepository(ApiDbContext context) : base(context)
         {
         }
+
+       
     }
 }

@@ -61,5 +61,7 @@ namespace API.Application.Controllers.Seguridad
 
         protected override async Task<IEnumerable<DetallesRolDto>> ObtenerTodosElementos(string? secuenciaOrdenamiento = null)
             => _mapper.Map<IEnumerable<DetallesRolDto>>(await _servicioBase.ObtenerTodos(secuenciaOrdenamiento, propiedadesIncluidas: query => query.Include(e => e.RolPermiso).ThenInclude(e => e.Permiso)));
+    
+    
     }
 }

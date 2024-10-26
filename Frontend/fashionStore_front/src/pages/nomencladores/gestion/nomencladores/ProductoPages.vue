@@ -1,8 +1,8 @@
 <template>
     <div class="q-pa-xl">
-        <q-breadcrumbs class="qb cursor-pointer q-pb-md">
-            <q-breadcrumbs-el label="Inicio" icon="home" @click="router.push('/inicio')" />
-            <q-breadcrumbs-el label="Nomencladores" icon="dashboard" @click="router.push('/gestion')" />
+        <q-breadcrumbs class=" qb cursor-pointer q-pb-md"  style="color: #e1e1e1">
+            <q-breadcrumbs-el label="Inicio" icon="home" @click="router.push('/inicio')" style="color: #e1e1e1"/>
+            <q-breadcrumbs-el label="Nomencladores" icon="dashboard" @click="router.push('/gestion')" style="color: #e1e1e1"/>
             <q-breadcrumbs-el label="Producto" />
         </q-breadcrumbs>
         <q-table class="q-pa-md" :filter="filter" title="Útiles" :rows="items" :columns="columns" row-key="id"
@@ -12,7 +12,7 @@
                 <div class="col-4 q-table__title">
                     <span>Productos</span>
                     <q-input debounce="500" bottom-slots v-model="filtroBusqueda" label="Buscar" counter maxlength="30"
-                    :dense="dense">
+                     >
                     <q-btn round dense flat icon="search" @click="CargarBusquedaFiltro" />
                 </q-input>
                 </div>
@@ -36,12 +36,23 @@
                     </q-tooltip>
                 </q-btn>
             </template>
-
-
-            <template v-slot:body-cell-produccion="props">
+            <template v-slot:body-cell-descripcion="props">
                 <q-td :props="props">
-                    <q-icon name="done" v-if="props.value == 0" style="color: #bdbdbd" size="25px" />
-                    <q-icon name="done" v-else style="color: #3a7779" size="25px" />
+                    <div>
+                        {{ PonerPuntosSupensivosACampo(props.row?.descripcion, 30) }}
+                        <q-tooltip>{{ props.row?.descripcion }}</q-tooltip>
+                    </div>
+                </q-td>
+            </template>
+
+            <template v-slot:body-cell-costo="props">
+                <q-td :props="props">
+                    {{convertirValoresADecimal(props.row.costo)}}
+                </q-td>
+            </template>
+            <template v-slot:body-cell-precio="props">
+                <q-td :props="props">
+                    {{convertirValoresADecimal(props.row.precioUSD)}}
                 </q-td>
             </template>
             <template v-slot:body-cell-activo="props">
@@ -78,7 +89,7 @@
     <!-- Add & Delete -->
     <q-dialog v-model="dialog" persistent>
         <q-card style="width: 700px; max-width: 80vw; height: auto">
-            <header class="q-pa-sm bg-primary">
+            <header class="q-pa-sm " style="background: linear-gradient(146deg,#222222  0%, #656e6e 150%)">
                 <q-toolbar>
                     <q-toolbar-title class="text-subtitle6 text-white">
                         {{
@@ -89,26 +100,26 @@
             <q-form @submit.prevent="Guardar()" @reset="close" ref="myForm">
                 <div class="h row q-ma-md">
 
-                    <q-input class="col-xs-12" label="Código*" v-model="objeto.codigo" color="primary" counter
-                        maxlength="100" :rules="[onlyLetter_Number, string, (val) =>
+                    <q-input class="col-xs-12 q-pa-md" label="Código *" v-model="objeto.codigo" color="primary" counter
+                        maxlength="30" :rules="[onlyLetter_Number, string, (val) =>
                             (items.length > 0
                                 ? !isValorRepetido(val, 'codigo', objeto, items)
                                 : true) || 'Ya existe un código  con ese valor',]" />
 
-                    <q-input class="col-xs-12" label="Descripción*" v-model="objeto.descripcion" color="primary" counter
-                        maxlength="255" :rules="[onlyLetter_Number, string, (val) =>
+                    <q-input class="col-xs-12 q-pa-md" label="Descripción *" v-model="objeto.descripcion" color="primary" counter autogrow
+                        maxlength="100" :rules="[onlyLetter_Number, string, (val) =>
                             (items.length > 0
                                 ? !isValorRepetido(val, 'descripcion', objeto, items)
                                 : true) || 'Ya existe una descripción  con ese valor',]" />
 
-                    <q-input class="col-xs-12 col-sm-5 q-mt-md" label="Costo *" outlined
+                    <q-input class="col-xs-12 col-sm-4 q-pa-md" label="Costo *"
                             v-model="objeto.costo"   prefix="$" :min="0" mask="#.##" fill-mask="0" reverse-fill-mask
                              :rules="[
                                 (val) => (val === 0 || val === '0') ? 'El valor de Costo no puede estar en cero' : true
                             ]">
                     </q-input>
 
-                    <q-input class="col-xs-12 col-sm-6 q-mt-md" label="Precio *" outlined
+                    <q-input class="col-xs-12 col-sm-4 q-pa-md" label="Precio *"
                             v-model="objeto.precioUSD" prefix="$" :min="0" mask="#.##" fill-mask="0" reverse-fill-mask
                              :rules="[
                                 (val) => (val === 0 || val === '0') ? 'El valor de Precio no puede estar en cero' : true
@@ -116,7 +127,7 @@
                     </q-input>
 
 
-                    <q-input class="col-xs-12 col-sm-5" label="Cantidad *" outlined
+                    <q-input class="col-xs-12 col-sm-4 q-pa-md" label="Cantidad *"
                             v-model="objeto.cantidad"   mask="#" fill-mask="1" reverse-fill-mask :min="1"
                              :rules="[
                                 (val) => (val === 0 || val === '0') ? 'El valor de la Cantidad no puede estar en cero' : true
@@ -127,7 +138,7 @@
                         v-show="!!objeto.id"
                         transition-show="flip-up"
                         transition-hide="flip-down"
-                        class="col-xs-12 col-sm-6"
+                        class="col-xs-12 col-sm-12 q-pa-md"
                         v-model="objeto.estadoProductoId"
                         label="Estado del producto *"
                         emit-value
@@ -186,11 +197,14 @@ import {
     isValorRepetido,
     eliminarElemento,
     obtener,
+    obtenerSinDialogo,
     closeDialog,
     filterOptions,
     loadListaFiltro,
+    loadHastaData,
+    imprimirTodosFiltrado,
 } from 'src/assets/js/util/funciones'
-import {PonerPuntosSupensivosACampo} from 'src/assets/js/util/extras'
+import {PonerPuntosSupensivosACampo, convertirValoresADecimal} from 'src/assets/js/util/extras'
 import { onlyLetter_Number, string } from 'src/assets/js/util/validator_form'
 import { Error } from "src/assets/js/util/notify";
 import { Error_Notify_DelecteObject } from "src/assets/js/util/dicc_notify";
@@ -273,31 +287,61 @@ onMounted(async () => {
 
 // Filtrado
 // 1- Funcion para pasar parametros en el Adicionar SaveData
-const Guardar = () => {
+const Guardar = async () => {
     const url = objeto.id ? 'Producto/Actualizar' : 'Producto/Crear'
-    objeto.cantidadStock = objeto.cantidad
-    saveData(url, objeto, load, close, dialogLoad)
+
+
+    let cantidadVendido = 0
+    if(objeto.id){
+     cantidadVendido = await loadHastaData(`Producto/CantidadProductoVendido?productoId=${objeto.id}`)
+    }
+    console.log("PRUEBA OBJETO: ",objeto)
+    if(objeto.id && objeto.cantidad<cantidadVendido){
+        Error(`Error, no puede poner una cantidad menor a la cantidad en stock ${objeto.cantidadStock}`)
+    }
+    else{
+        objeto.cantidadStock = objeto.cantidad-cantidadVendido
+        saveData(url, objeto, load, close, dialogLoad)
+    }
 }
 
 // Funcion para Obtener los datos para editar
 const obtenerElementoPorId = async (id) => {
     filtradoEstadoProducto.value = itemsEstadoProducto.value
     await obtener('Producto/ObtenerPorId', id, objeto, dialogLoad, dialog)
+
+    // Formatear costo como número decimal con dos dígitos
+  if (Number.isInteger(objeto.costo)) {
+    objeto.costo = objeto.costo.toFixed(2)
+  }
+
+  // Formatear costo como número decimal con dos dígitos
+  if (Number.isInteger(objeto.precioUSD)) {
+    objeto.precioUSD = objeto.precioUSD.toFixed(2)
+  }
+
 }
 
 // Funcion para eliminar elemento
 const eliminar = async () => {
-    await eliminarElemento(
-        'Producto/Eliminar',
-        idElementoSeleccionado.value,
-        load,
-        dialogLoad
-    ).
-        then(async (response) => {
-            return response
-        }).catch(async (error) => {
-            Error(Error_Notify_DelecteObject)
-        })
+    await obtenerSinDialogo('Producto/ObtenerPorId', idElementoSeleccionado.value, objeto, dialogLoad)
+
+    if(objeto.cantidad !== objeto.cantidadStock){
+        Error("No puede eliminar este elemento porque ya tiene al menos una venta realizada de él")
+    }
+    else{
+        await eliminarElemento(
+            'Producto/Eliminar',
+            idElementoSeleccionado.value,
+            load,
+            dialogLoad
+        ).
+            then(async (response) => {
+                return response
+            }).catch(async (error) => {
+                Error(Error_Notify_DelecteObject)
+            })
+    }
 }
 
 // Funcion para abrir el dialog de eliminar y pasar el id del elemento
@@ -323,6 +367,7 @@ const close = async () => {
 
 // Funcion para cargar lista de busqueda por codigo o descripcion ademas del filtro seleccionado
 const CargarBusquedaFiltro = async () => {
+    dialogLoad.value=true
     //Tiene texto escrito
     if (filtroBusqueda.value != null && filtroBusqueda.value != '') {
         items.value = await loadListaFiltro(`Producto/ObtenerListadoPaginado?TextoBuscar=${filtroBusqueda.value}`)
@@ -351,5 +396,21 @@ const CargarBusquedaFiltro = async () => {
             items.value = await loadListaFiltro(`Producto/ObtenerListadoPaginado?TextoBuscar=Disponible`)
         }
     }
+    dialogLoad.value=false
+}
+
+const imprimir = async () =>{
+
+if(items.value.length !== 0){
+const texto = filtroBusqueda.value
+let esDisponible =filtroDisponibles.value
+    const url = '/Producto/ImprimirPorFiltro'
+    dialogLoad.value = true // activar Loading
+    await imprimirTodosFiltrado(url, texto, esDisponible)
+    dialogLoad.value = false // Desactivar Loading
+}
+else{
+    Error("No tiene elementos para imprimir")
+}
 }
 </script>

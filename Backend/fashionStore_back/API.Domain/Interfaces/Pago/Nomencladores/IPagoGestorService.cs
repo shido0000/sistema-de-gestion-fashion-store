@@ -5,5 +5,6 @@ namespace API.Domain.Interfaces.Pago.Nomencladores
 {
     public interface IPagoGestorService : IBaseService<PagoGestor, PagoGestorValidator>
     {
+        Task<string> ObtenerNombreCompletoGestorPorVentaDada(Guid ventaId);
     }
 }

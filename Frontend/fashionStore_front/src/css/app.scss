@@ -52,9 +52,11 @@
 .card:hover {
     text-decoration-color: #ffffff;
     transform: scale(1.05);
-    background: linear-gradient(146deg, #329d9c 0%, #59e3e2 121.21%);
+    background: linear-gradient(146deg, #c8c8c8 0%, #637171 121.21%);
     color: #ffffff;
 }
+
+#bed0d0
 
 .card:hover .li {
     color: #ffffff;
@@ -75,12 +77,12 @@
     z-index: 1;
     /* Asegúrate de que el icono esté debajo de la tarjeta */
 }
-
+//637171  8f9e9e
 .ico {
     margin-top: 0.5rem;
     color: #171740;
     padding: 4px;
-    background: linear-gradient(146deg, #329d9c 0%, #59e3e2 121.21%);
+    background: linear-gradient(146deg, #637171 0%, #8f9e9e 121.21%);
     border-radius: 10px;
     text-align: left;
     box-shadow: 18.571px 4.952px 29.714px 0px rgba(33, 82, 115, 0.12);
@@ -96,7 +98,8 @@
 .li {
     font-size: 1.2em;
     font-weight: bold;
-    color: #205072;
+   // color: #205072;
+   color: #111111;
 }
 
 .card-title {

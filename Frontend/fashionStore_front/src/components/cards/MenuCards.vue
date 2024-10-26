@@ -1,8 +1,8 @@
 <template class="justify-center">
-    <q-card class="card  text-primary justify-center   cursor-pointer" @click="router.push(props.link)">
+    <q-card class="card  text-primary justify-center   cursor-pointer" @click="router.push(props.link)" style="background-color: #bbbbbb;">
         <q-card-section class="pp q-mt-sm justify-center">
-            <div class="q-gutter-md ">
-                <div class="icon-container ">
+            <div class="q-gutter-md " >
+                <div class="icon-container " >
                     <q-icon class="ico q-pa-sm" size="2.5rem" :name="props.icon" />
                 </div>
                 <div class="text-container q-mt-md q-pl-xs">

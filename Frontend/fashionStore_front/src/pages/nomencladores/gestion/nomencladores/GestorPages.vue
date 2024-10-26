@@ -1,17 +1,20 @@
 <template>
     <div class="q-pa-xl">
-        <q-breadcrumbs class="qb cursor-pointer q-pb-md">
-            <q-breadcrumbs-el label="Inicio" icon="home" @click="router.push('/inicio')" />
-            <q-breadcrumbs-el label="Nomencladores" icon="dashboard" @click="router.push('/gestion')" />
+        <q-breadcrumbs class="qb cursor-pointer q-pb-md" style="color: #e1e1e1">
+            <q-breadcrumbs-el label="Inicio" icon="home" @click="router.push('/inicio')" style="color: #e1e1e1"/>
+            <q-breadcrumbs-el label="Nomencladores" icon="dashboard" @click="router.push('/gestion')" style="color: #e1e1e1"/>
             <q-breadcrumbs-el label="Gestor" />
         </q-breadcrumbs>
-        <q-table class="q-pa-md" :filter="filter" title="Útiles" :rows="items" :columns="columns"
+        <q-table class="q-pa-md"  title="Útiles" :rows="items" :columns="columns"
             row-key="id" no-data-label="No hay elementos disponibles" no-results-label="No hay elementos disponibles"
             loading-label="Cargando..." rows-per-page-label="Filas por página">
             <template v-slot:top>
                 <div class="col-4 q-table__title">
                     <span>Gestores</span>
-                    <q-input outline color="positive" flat v-model="filter" debounce="500" label="Buscar" />
+                   <q-input debounce="500" bottom-slots v-model="filtroBusqueda" label="Buscar" counter maxlength="30"
+                     >
+                    <q-btn round dense flat icon="search" @click="CargarBusquedaFiltro" />
+                </q-input>
                 </div>
                 <q-space />
 
@@ -80,26 +83,26 @@
     <!-- Add & Delete -->
     <q-dialog v-model="dialog" persistent>
         <q-card style="width: 700px; max-width: 80vw; height: auto">
-            <header class="q-pa-sm bg-primary">
+            <header class="q-pa-sm" style="background: linear-gradient(146deg,#222222  0%, #656e6e 150%)">
                 <q-toolbar>
                     <q-toolbar-title class="text-subtitle6 text-white">
                         {{
-                            objeto?.id ? "Editar Estado del Producto" : "Adicionar Estado del Producto"
+                            objeto?.id ? "Editar Gestor" : "Adicionar Gestor"
                         }}</q-toolbar-title>
                 </q-toolbar>
             </header>
             <q-form @submit.prevent="Guardar()" @reset="close" ref="myForm">
                 <div class="h row q-ma-md">
-                    <q-input class="col-xs-12 col-md-5" label="Nombre *" v-model="objeto.nombre" color="primary" counter
+                    <q-input class="col-xs-12 col-md-12 q-pa-md" label="Nombre *" v-model="objeto.nombre" color="primary" counter
                         maxlength="100" :rules="[onlyLettersAndSpaces, string]" />
 
-                        <q-input class="col-xs-12 col-md-6" label="Apellidos *" v-model="objeto.apellidos" color="primary" counter
+                        <q-input class="col-xs-12 col-md-12 q-pa-md" label="Apellidos *" v-model="objeto.apellidos" color="primary" counter
                         maxlength="100" :rules="[onlyLettersAndSpaces, string]" />
 
-                        <q-input class="col-xs-12 col-md-5" label="Dirección *" v-model="objeto.direccion" color="primary" counter
+                        <q-input class="col-xs-12 col-md-12 q-pa-md" label="Dirección *" v-model="objeto.direccion" color="primary" counter
                         maxlength="255" :rules="[onlyLetter_Number, string]" />
 
-                        <q-input class="col-xs-12 col-md-6" label="Teléfono *" v-model="objeto.telefono" color="primary" counter
+                        <q-input class="col-xs-12 col-md-12 q-pa-md" label="Teléfono *" v-model="objeto.telefono" color="primary" counter
                         mask="########"
                         maxlength="8"   />
 
@@ -124,6 +127,8 @@ import {
     obtener,
     closeDialog,
     validarSoloNumeros,
+    imprimirTodosFiltradoSoloTexto,
+    loadListaFiltro,
 } from 'src/assets/js/util/funciones'
 import { PonerPuntosSupensivosACampo } from 'src/assets/js/util/extras'
 import { onlyLetter_Number, string, onlyLetter_Number_No_White_Spaces,onlyLettersAndSpaces } from 'src/assets/js/util/validator_form'
@@ -147,7 +152,7 @@ const router = useRouter();
 
 // DATOS DE LA TABLA
 const columns = dataColumnGestor;
-const filter = ref("");
+const filtroBusqueda = ref('')
 const items = ref([]);
 
 // DIALOGS VAR
@@ -248,4 +253,36 @@ const handleCloseDialog = () => {
 const close = async () => {
     closeDialog(objeto, objetoInicial, myForm, dialog)
 }
+
+
+// Funcion para cargar lista de busqueda por codigo o descripcion ademas del filtro seleccionado
+const CargarBusquedaFiltro = async () => {
+    dialogLoad.value=true
+    //Tiene texto escrito
+    if (filtroBusqueda.value != null && filtroBusqueda.value != '') {
+        items.value = await loadListaFiltro(`Gestor/ObtenerListadoPaginado?TextoBuscar=${filtroBusqueda.value}`)
+    }
+
+    //No Tiene texto escrito
+     else {
+        items.value = await loadListaFiltro('Gestor/ObtenerListadoPaginado')
+
+    }
+    dialogLoad.value=false
+}
+
+const imprimir = async () =>{
+
+if(items.value.length !== 0){
+const texto = filtroBusqueda.value
+    const url = '/Gestor/ImprimirPorFiltro'
+    dialogLoad.value = true // activar Loading
+    await imprimirTodosFiltradoSoloTexto(url, texto)
+    dialogLoad.value = false // Desactivar Loading
+}
+else{
+    Error("No tiene elementos para imprimir")
+}
+}
+
 </script>

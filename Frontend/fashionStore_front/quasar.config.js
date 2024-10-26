@@ -42,6 +42,16 @@ module.exports = configure(function (/* ctx */) {
 
             'roboto-font', // optional, you are not bound to it
             'material-icons', // optional, you are not bound to it
+
+            // para iconos
+            'material-icons',
+            'mdi-v7',
+            'ionicons-v4', // last webfont was available in v4.6.3
+            'eva-icons',
+            'fontawesome-v6',
+            'themify',
+            'line-awesome',
+            'bootstrap-icons'
         ],
 
         // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build

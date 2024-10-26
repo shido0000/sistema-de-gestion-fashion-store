@@ -61,6 +61,20 @@ const loadListaFiltro = async (endpoint) => {
     })
 }
 
+// Funcion para obtener una lista filtrada pasandole el endpoint y el arreglo
+const loadHastaData = async (endpoint) => {
+    return await api
+    .get(endpoint)
+    .then((r) => {
+        return r.data
+    })
+    .catch((error) => {
+        error.response === undefined
+            ? Error(error.message)
+            : Error(error.response.data.mensajeError)
+    })
+}
+
 // Funcion para obtener una lista pasandole el endpoint y el arreglo
 const load = async (endpoint, lista) => {
     await api
@@ -114,6 +128,73 @@ const saveData = async (endpoint, objeto, load, close, dialogLoad) => {
             return respuesta
         })
     }
+}
+
+const saveDataSinMensaje = async (endpoint, objeto) => {
+    const respuesta = reactive({
+        resultado: null,
+        mensajeError: null
+    })
+
+
+    if (objeto.id) {
+        return await api.put(`/${endpoint}/${objeto.id}`, objeto).then(async (response) => {
+            respuesta.resultado = response
+            return respuesta
+        }).catch(async (error) => {
+            respuesta.mensajeError = error
+            return respuesta
+        })
+    } else {
+        return await api.post(`/${endpoint}`, objeto).then(async (response) => {
+            respuesta.resultado = response
+            return respuesta
+        }).catch(async (error) => {
+            respuesta.mensajeError = error
+            return respuesta
+        })
+    }
+}
+
+// funcion para logearse
+// Funcion para guardar y editar
+const logueo = async (endpoint, objeto, close, dialogLoad) => {
+    const respuesta = reactive({
+        resultado: null,
+        mensajeError: null
+    })
+
+    dialogLoad.value = true
+
+        return await api.post(`/${endpoint}`, objeto).then(async (response) => {
+            respuesta.resultado = response
+          //  Success.call(this, 'Autenticación exitosa')
+
+            await close()
+            dialogLoad.value = false
+            return respuesta
+        }).catch(async (error) => {
+          //  Error.call(this, 'Usuario o contraseña no válido.')
+            respuesta.mensajeError = error
+            await close()
+            dialogLoad.value = false
+            return respuesta
+        })
+
+}
+
+const obtenerRolLogueo = async (endpoint) => {
+    return await api
+        .get(endpoint)
+        .then((r) => {
+            console.log("R: ",r)
+            return r.data
+        })
+        .catch((error) => {
+            error.response === undefined
+                ? Error(error.message)
+                : Error(error.response.data.mensajeError)
+        })
 }
 
 // Funcion para cambiar contrasenha
@@ -172,6 +253,16 @@ const obtener = async (endpoint, id, objeto, dialogLoad, dialog) => {
             Object.assign(objeto, r.data.result)
             title.value = `Editar ${endpoint}`
             dialog.value = true
+        }).catch((error) => {
+            error.response === undefined ? Error(error.message) : Error(error.response.data.mensajeError)
+        })
+    dialogLoad.value = false
+}
+const obtenerSinDialogo = async (endpoint, id, objeto, dialogLoad) => {
+    dialogLoad.value = true
+    await api.get(`${endpoint}/${id}`)
+        .then(r => {
+            Object.assign(objeto, r.data.result)
         }).catch((error) => {
             error.response === undefined ? Error(error.message) : Error(error.response.data.mensajeError)
         })
@@ -298,11 +389,71 @@ else{
 }
   }
 
+
+  const checkAuthentication = () => {
+    return localStorage.getItem('usuario') !== null
+  }
+  const imprimirTodosFiltrado = async (url, texto, esDisponible) => {
+    try {
+        // Realiza una solicitud HTTP al endpoint "/descargar/pdf"
+        const { data } = await api.get(`${url}?texto=${texto}&esDisponible=${esDisponible}`, {
+            responseType: "blob",
+        });
+        // Crea un objeto Blob a partir de los datos de la respuesta
+        const blob = new Blob([data], { type: "application/pdf" });
+        // Crea una URL para el objeto Blob
+        const dir = window.URL.createObjectURL(blob);
+        // Abre una nueva ventana o pestaña del navegador con el PDF
+        window.open(dir, "_blank");
+        return data;
+    } catch (error) {
+        throw new Error(error);
+    }
+};
+
+const imprimirTodosFiltradoPagos = async (url, texto, esPagado) => {
+    try {
+        // Realiza una solicitud HTTP al endpoint "/descargar/pdf"
+        const { data } = await api.get(`${url}?texto=${texto}&esPagado=${esPagado}`, {
+            responseType: "blob",
+        });
+        // Crea un objeto Blob a partir de los datos de la respuesta
+        const blob = new Blob([data], { type: "application/pdf" });
+        // Crea una URL para el objeto Blob
+        const dir = window.URL.createObjectURL(blob);
+        // Abre una nueva ventana o pestaña del navegador con el PDF
+        window.open(dir, "_blank");
+        return data;
+    } catch (error) {
+        throw new Error(error);
+    }
+};
+
+const imprimirTodosFiltradoSoloTexto = async (url, texto) => {
+    try {
+        // Realiza una solicitud HTTP al endpoint "/descargar/pdf"
+        const { data } = await api.get(`${url}?texto=${texto}`, {
+            responseType: "blob",
+        });
+        // Crea un objeto Blob a partir de los datos de la respuesta
+        const blob = new Blob([data], { type: "application/pdf" });
+        // Crea una URL para el objeto Blob
+        const dir = window.URL.createObjectURL(blob);
+        // Abre una nueva ventana o pestaña del navegador con el PDF
+        window.open(dir, "_blank");
+        return data;
+    } catch (error) {
+        throw new Error(error);
+    }
+};
+
 export {
     saveData,
+    saveDataSinMensaje,
     closeDialog,
     load,
     obtener,
+    obtenerSinDialogo,
     validarSoloNumeros,
     validarCorreo,
     filterOptions,
@@ -314,6 +465,13 @@ export {
     loadSelectList,
     loadGetOneElement,
     loadListaFiltro,
+    loadHastaData,
     validarSpinnerGenerico,
     saveDataCambiarContrasenha,
+    logueo,
+    obtenerRolLogueo,
+    checkAuthentication,
+    imprimirTodosFiltrado,
+    imprimirTodosFiltradoSoloTexto,
+    imprimirTodosFiltradoPagos,
 }

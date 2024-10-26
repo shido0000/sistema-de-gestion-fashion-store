@@ -1,7 +1,8 @@
 const routes = [
     {
         path: "/",
-        component: () => import("src/layouts/MainLayout.vue"),
+         component: () => import("src/layouts/MainLayout.vue"),
+       //component: () => import("src/layouts/AuthLayout.vue"),
         children: [
             // #region INICIO
             /*********************************************************************
@@ -122,6 +123,27 @@ const routes = [
 
             ],
     },
+
+  // #region LOGIN
+            /*********************************************************************
+             *                          INDEX LOGIN                         *
+             *********************************************************************/
+
+    {
+        path: "/",
+        redirect: "/login"  // Redirige a /login cuando el usuario accede a "/"
+      },
+      {
+        path: "/login",
+        component: () => import("src/layouts/AuthLayout.vue"),
+        children: [
+          {
+            path: "",
+            name: "Login",
+            component: () => import("pages/nomencladores/seguridad/IndexPageLogin.vue"),
+          },
+        ],
+      },
 
     // Always leave this as last one,
     // but you can also remove it

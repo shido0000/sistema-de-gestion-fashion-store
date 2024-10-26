@@ -5,5 +5,6 @@ namespace API.Domain.Interfaces.Gestion.Nomencladores
 {
     public interface IProductoService : IBaseService<Producto, ProductoValidator>
     {
+        Task<int> CantidadProductoVendido(Guid productoId);
     }
 }

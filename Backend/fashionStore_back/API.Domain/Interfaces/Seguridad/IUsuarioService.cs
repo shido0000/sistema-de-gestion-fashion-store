@@ -9,5 +9,7 @@ namespace API.Domain.Interfaces.Seguridad
         Task CambiarContrasenna(Guid usuarioId, string contrasenna, bool debeCambiarContrasenna = false);
         Task<List<Permiso>> ObtenerPermisos(string username);
         Task<Usuario?> ObtenerPorUsername(string username, Func<IQueryable<Usuario>, IIncludableQueryable<Usuario, object>>? propiedadesIncluidas = null);
+        Task<Usuario?> ObtenerElementoPorUsuario(string nombreUsuario);
+        Task<bool> EsAdministrador(Guid usuarioId);
     }
 }

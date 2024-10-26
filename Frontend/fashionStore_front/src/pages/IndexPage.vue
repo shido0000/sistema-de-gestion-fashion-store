@@ -7,8 +7,8 @@
     >-->
     <img
       alt="Quasar logo"
-      src="~assets/Logo1.png"
-      style="width: 200px; height: 200px"
+      src="~assets/logo_login.png"
+      style="width: 40%; height: 40%"
     >
   </q-page>
 </template>

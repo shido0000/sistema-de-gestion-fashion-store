@@ -1,20 +1,20 @@
 <template>
     <div class="q-pa-xl">
-        <q-breadcrumbs class="qb cursor-pointer q-pb-md">
-            <q-breadcrumbs-el label="Inicio" icon="home" @click="router.push('/inicio')" />
-            <q-breadcrumbs-el label="Registros" icon="dashboard" @click="router.push('/pago')" />
-            <q-breadcrumbs-el label="Ganancia_gestor" />
+        <q-breadcrumbs class="qb cursor-pointer q-pb-md" style="color: #e1e1e1">
+            <q-breadcrumbs-el label="Inicio" icon="home" @click="router.push('/inicio')" style="color: #e1e1e1"/>
+            <q-breadcrumbs-el label="Registros" icon="dashboard" @click="router.push('/pago')" style="color: #e1e1e1"/>
+            <q-breadcrumbs-el label="Ganancia de los gestores" />
         </q-breadcrumbs>
-        <q-table class="q-pa-md" :filter="filter" title="Útiles" :rows="transformedItems" :columns="columns" row-key="id"
+        <q-table class="q-pa-md" :filter="filter" title="Útiles" :rows="items" :columns="columns" row-key="id"
             no-data-label="No hay elementos disponibles" no-results-label="No hay elementos disponibles"
             loading-label="Cargando..." rows-per-page-label="Filas por página">
             <template v-slot:top>
                 <div class="col-4 q-table__title">
-                    <span>Ganancias de gestores</span>
-                    <q-input debounce="500" bottom-slots v-model="filtroBusqueda" label="Buscar" counter maxlength="30"
+                    <span>Ganancia de los gestores</span>
+                   <!-- <q-input debounce="500" bottom-slots v-model="filtroBusqueda" label="Buscar" counter maxlength="30"
                     :dense="dense">
                     <q-btn round dense flat icon="search" @click="CargarBusquedaFiltro" />
-                </q-input>
+                </q-input>-->
                 </div>
                 <q-space />
 
@@ -23,7 +23,7 @@
                 <q-toggle class="q-mr-md" color="primary" label="Pagados" v-model="filtroPagados"
                     @update:model-value="CargarBusquedaFiltro" />
 
-                <q-btn class="bg-primary" style="width: 20px" color="primary" icon="add" @click="dialog = true">
+                <q-btn class="bg-primary" style="width: 20px" color="primary" icon="add" @click="abrirDialogoInsertar()">
                     <q-tooltip class="bg-primary" transition-show="flip-right" transition-hide="flip-left"
                         :offset="[10, 10]">Adicionar</q-tooltip>
                 </q-btn>
@@ -44,6 +44,23 @@
                     </div>
                 </q-td>
             </template>
+
+            <template v-slot:body-cell-fecha="props">
+                <q-td :props="props">
+                    <div>
+                        {{ getFechaVenta(props.row.ventaId) }}
+                    </div>
+                </q-td>
+            </template>
+
+            <template v-slot:body-cell-gestor="props">
+                <q-td :props="props">
+                    <div>
+                        {{ getGestorNombre(props.row.ventaId) }}
+                    </div>
+                </q-td>
+            </template>
+
             <template v-slot:body-cell-produccion="props">
                 <q-td :props="props">
                     <q-icon name="done" v-if="props.value == 0" style="color: #bdbdbd" size="25px" />
@@ -84,7 +101,7 @@
     <!-- Add & Delete -->
     <q-dialog v-model="dialog" persistent>
         <q-card style="width: 700px; max-width: 80vw; height: auto">
-            <header class="q-pa-sm bg-primary">
+            <header class="q-pa-sm " style="background: linear-gradient(146deg,#222222  0%, #656e6e 150%)">
                 <q-toolbar>
                     <q-toolbar-title class="text-subtitle6 text-white">
                         {{
@@ -99,7 +116,7 @@
                         :disable="!!objeto.id"
                         transition-show="flip-up"
                         transition-hide="flip-down"
-                        class="col-xs-12"
+                        class="col-xs-12 q-pa-md"
                         v-model="objeto.ventaId"
                         label="Venta *"
                         emit-value
@@ -137,19 +154,19 @@
                         </template>
                     </q-select>
 
-                    <label class="col-xs-12 col-md-6" :class="{ 'text-primary': objeto.id }">
+                    <label class="col-xs-12 col-md-6 q-pa-md" :class="{ 'text-primary': objeto.id }">
                         Nombre del Gestor : {{ objeto.nombreGestor }}
                     </label>
 
-                    <label class="col-xs-12 col-md-6" :class="{ 'text-primary': objeto.id }">
+                    <label class="col-xs-12 col-md-6 q-pa-md" :class="{ 'text-primary': objeto.id }">
                        Pago Total: {{ objeto.pagoTotal }}
                     </label>
 
 
-                    <q-checkbox class="q-mr-md q-mt-sm" right-label v-model="objeto.pagado"
+                    <q-checkbox class="q-px-md" right-label v-model="objeto.pagado"
                          label="Pagado" color="primary" />
 
-                    <q-card-actions class="col-12 q-mt-md justify-end">
+                    <q-card-actions class="col-12 q-mt-md q-pa-md justify-end">
                         <q-btn :disable="!objeto.pagado && !objeto.id" class="text-white" color="primary" aling="right" type="submit" label="Guardar" />
                         <q-btn outline color="primary" type="reset" label="Cancelar" />
                     </q-card-actions>
@@ -172,6 +189,7 @@ import {
     filterOptions,
     loadGetOneElement,
     loadListaFiltro,
+    imprimirTodosFiltradoPagos,
 } from 'src/assets/js/util/funciones'
 import { PonerPuntosSupensivosACampo } from 'src/assets/js/util/extras'
 import { onlyLetter_Number, onlyLetter_Number_No_White_Spaces, string } from 'src/assets/js/util/validator_form'
@@ -282,20 +300,22 @@ const Guardar = () => {
 
 const obtenerElementoPorIdAdiccionar = async (id) => {
     ventaSeleccionada.value = await loadGetOneElement(`Venta/ObtenerPorId/${id}`)
-    objeto.nombreGestor = ventaSeleccionada.value.gestor.nombre + " " + ventaSeleccionada.value.gestor.apellidos
+    objeto.nombreGestor = ventaSeleccionada.value.productosVendidos[0].gestor.nombre + " " + ventaSeleccionada.value.productosVendidos[0].gestor.apellidos
+  //  venta.productosVendidos[0].gestor.nombre
     console.log("ventaSeleccionada: ",ventaSeleccionada)
     objeto.pagoTotal=calcularDiferenciaPrecios()
 }
 
 const obtenerElementoPorId = async (id) => {
     await obtener('PagoGestor/ObtenerPorId', id, objeto, dialogLoad, dialog)
-    filtradoVentaNoPagadas.value = listaVentasNoPagadas.value
+    filtradoVentaNoPagadas.value = itemsVenta.value
     actualizarListaVentasNoPagadas()
     console.log("ventaSeleccionada: ",ventaSeleccionada)
 }
 
 // Funcion para eliminar elemento
 const eliminar = async () => {
+
     await eliminarElemento(
         'PagoGestor/Eliminar',
         idElementoSeleccionado.value,
@@ -331,14 +351,22 @@ const close = async () => {
 }
 
 // Función para actualizar lista Ventas No Pagadas
-const actualizarListaVentasNoPagadas = () =>{
+/*const actualizarListaVentasNoPagadas = () =>{
     console.log("itemsVenta: ", itemsVenta.value);
     console.log("items: ", items.value);
     listaVentasNoPagadas.value = itemsVenta.value.filter(item =>
         !items.value.includes(item)
     );
     console.log("listaVentasNoPagadas: ", listaVentasNoPagadas.value);
+}*/
+
+const actualizarListaVentasNoPagadas = () => {
+    const itemsVentaCodigos = items.value.map(item => item.ventaCodigo);
+    listaVentasNoPagadas.value = itemsVenta.value.filter(item => !itemsVentaCodigos.includes(item.codigo));
+    filtradoVentaNoPagadas.value = itemsVenta.value
 }
+
+
 
 /*const actualizarListaVentasNoPagadas = async () => {
      listaVentasNoPagadas.value = await loadGet(`PagoGestor/ObtenerListadoPaginado?TextoBuscar=${false}`) ?? [];
@@ -348,33 +376,35 @@ const actualizarListaVentasNoPagadas = () =>{
 const calcularDiferenciaPrecios = () => {
     let pagoTotal=0
     const objeto = ventaSeleccionada.value
-    for (let i = 0; i < objeto.productos.length; i++) {
-        const producto = objeto.productos[i]
-        const precioGestor = objeto.preciosGestor[i]
-        const cantidad = objeto.cantidades[i]
+    for (let i = 0; i < objeto.productosVendidos.length; i++) {
+        const productoPrecio = objeto.productosVendidos[i].producto.precioUSD
+        const precioGestor = objeto.productosVendidos[i].precioGestor
+        const cantidad = objeto.productosVendidos[i].cantidad
 
-        const diferencia = (precioGestor - producto.precioUSD) * cantidad
+        const diferencia = (precioGestor - productoPrecio) * cantidad
         pagoTotal+=diferencia
     }
     return pagoTotal
 }
 
-const transformData = (data) => {
+/*const transformData = (data) => {
+    console.log("data: ",data)
   return data.map(item => ({
+
     id: item.id, // Incluye el id en los datos transformados
     fecha: item.venta.fecha,
     ventaCodigo: item.ventaCodigo,
-    nombreGestor: item.venta.gestor.nombre + " " + item.venta.gestor.apellidos,
+   // nombreGestor: item.productosVendidos[0].gestor.nombre + " " + item.productosVendidos[0].gestor.apellidos,
     pagoTotal: item.pagoTotal,
     pagado: item.pagado,
     action: 'Acciones' // Puedes personalizar esto según tus necesidades
   }))
-}
+}*/
 
-const transformedItems = computed(() => transformData(items.value))
+//const transformedItems = computed(() => transformData(items.value))
 
 // Funcion para cargar lista de busqueda por codigo o descripcion ademas del filtro seleccionado
-const CargarBusquedaFiltro = async () => {
+/*const CargarBusquedaFiltro = async () => {
     //Tiene texto escrito
     if (filtroBusqueda.value != null && filtroBusqueda.value != '') {
         items.value = await loadListaFiltro(`PagoGestor/ObtenerListadoPaginado?TextoBuscar=${filtroBusqueda.value}`)
@@ -403,5 +433,66 @@ const CargarBusquedaFiltro = async () => {
             items.value = await loadListaFiltro(`PagoGestor/ObtenerListadoPaginado?TextoBuscar=${filtroPagados.value}`)
         }
     }
+}*/
+
+const CargarBusquedaFiltro = async () => {
+
+        //Filtra por todos
+        if (!filtroPagados.value) {
+            items.value = await loadListaFiltro('PagoGestor/ObtenerListadoPaginado')
+        }
+        //Filtra por activos
+        else {
+            items.value = await loadListaFiltro(`PagoGestor/ObtenerListadoPaginado?TextoBuscar=${filtroPagados.value}`)
+        }
+
+}
+
+const getGestorNombre = (id) => {
+    const venta = itemsVenta.value.find(item => item.id === id)
+    return venta ? venta.productosVendidos[0].gestor.nombre +" "+ venta.productosVendidos[0].gestor.apellidos: ''
+}
+
+const getFechaVenta = (id) => {
+    const venta = itemsVenta.value.find(item => item.id === id)
+    if (!venta) return ''
+
+    const fecha = new Date(venta.fecha)
+    const dia = String(fecha.getDate()).padStart(2, '0')
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0') // Los meses en JavaScript son 0-indexados
+    const anio = fecha.getFullYear()
+
+    let horas = fecha.getHours();
+    const minutos = String(fecha.getMinutes()).padStart(2, '0')
+    const segundos = String(fecha.getSeconds()).padStart(2, '0')
+    const ampm = horas >= 12 ? 'PM' : 'AM'
+    horas = horas % 12
+    horas = horas ? horas : 12 // La hora '0' debe ser '12'
+    const horasFormateadas = String(horas).padStart(2, '0')
+
+    const fechaFormateada = `${dia}/${mes}/${anio}`
+    const horaFormateada = `${horasFormateadas}:${minutos}:${segundos} ${ampm}`
+
+    return `${fechaFormateada} ${horaFormateada}`
+}
+
+const abrirDialogoInsertar = () =>{
+    actualizarListaVentasNoPagadas()
+    dialog.value=true
+}
+
+const imprimir = async () =>{
+
+if(items.value.length !== 0){
+const texto = filtroBusqueda.value
+const esPagado =filtroPagados.value
+    const url = '/PagoGestor/ImprimirPorFiltro'
+    dialogLoad.value = true // activar Loading
+    await imprimirTodosFiltradoPagos(url, texto, esPagado)
+    dialogLoad.value = false // Desactivar Loading
+}
+else{
+    Error("No tiene elementos para imprimir")
+}
 }
 </script>

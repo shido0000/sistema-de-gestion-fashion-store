@@ -1,8 +1,8 @@
 <template>
     <div class="q-pa-xl">
-        <q-breadcrumbs class="qb cursor-pointer q-pb-md">
-            <q-breadcrumbs-el label="Inicio" icon="home" @click="router.push('/inicio')" />
-            <q-breadcrumbs-el label="Nomencladores" icon="dashboard" @click="router.push('/gestion')" />
+        <q-breadcrumbs class="qb cursor-pointer q-pb-md" style="color: #e1e1e1">
+            <q-breadcrumbs-el label="Inicio" icon="home" @click="router.push('/inicio')" style="color: #e1e1e1"/>
+            <q-breadcrumbs-el label="Nomencladores" icon="dashboard" @click="router.push('/gestion')" style="color: #e1e1e1" />
             <q-breadcrumbs-el label="Trabajador" />
         </q-breadcrumbs>
         <q-table class="q-pa-md" :filter="filter" title="Útiles" :rows="items" :columns="columns"
@@ -11,8 +11,10 @@
             <template v-slot:top>
                 <div class="col-4 q-table__title">
                     <span>Trabajadores</span>
-                    <q-input outline color="positive" flat v-model="filter" debounce="500" label="Buscar" />
-                </div>
+                    <q-input debounce="500" bottom-slots v-model="filtroBusqueda" label="Buscar" counter maxlength="30"
+                     >
+                    <q-btn round dense flat icon="search" @click="CargarBusquedaFiltro" />
+                </q-input> </div>
                 <q-space />
 
                 <q-btn class="bg-primary" style="width: 20px" color="primary" icon="add" @click="dialog = true">
@@ -85,7 +87,7 @@
     <!-- Add & Delete -->
     <q-dialog v-model="dialog" persistent>
         <q-card style="width: 700px; max-width: 80vw; height: auto">
-            <header class="q-pa-sm bg-primary">
+            <header class="q-pa-sm" style="background: linear-gradient(146deg,#222222  0%, #656e6e 150%)">
                 <q-toolbar>
                     <q-toolbar-title class="text-subtitle6 text-white">
                         {{
@@ -95,20 +97,20 @@
             </header>
             <q-form @submit.prevent="Guardar()" @reset="close" ref="myForm">
                 <div class="h row q-ma-md">
-                    <q-input class="col-xs-12 col-md-12" label="Nombre *" v-model="objeto.nombre" color="primary" counter
+                    <q-input class="col-xs-12 col-md-12  q-pa-md" label="Nombre *" v-model="objeto.nombre" color="primary" counter
                         maxlength="50" :rules="[onlyLettersAndSpaces, string]" />
 
-                        <q-input class="col-xs-12 col-md-12" label="Apellidos *" v-model="objeto.apellidos" color="primary" counter
-                        maxlength="60" :rules="[onlyLettersAndSpaces, string]" />
+                        <q-input class="col-xs-12 col-md-12  q-pa-md" label="Apellidos *" v-model="objeto.apellidos" color="primary" counter
+                        maxlength="50" :rules="[onlyLettersAndSpaces, string]" />
 
-                        <q-input class="col-xs-12 col-md-5" label="Usuario *" v-model="objeto.username" color="primary" counter
+                        <q-input class="col-xs-12 col-md-6  q-pa-md" label="Usuario *" v-model="objeto.username" color="primary" counter
                         maxlength="10" :rules="[onlyLetter_Number, string]" />
 
                           <q-select
 
                         transition-show="flip-up"
                         transition-hide="flip-down"
-                        class="col-xs-12 col-sm-6"
+                        class="col-xs-12 col-sm-6  q-pa-md"
                         v-model="objeto.rolId"
                         label="Rol *"
                         emit-value
@@ -146,15 +148,15 @@
                         </template>
                     </q-select>
 
-                    <q-input class="col-xs-12 col-md-5" label="Contraseña *" v-model="objeto.contrasenna" color="primary" counter
+                    <q-input v-show="!objeto.id" class="col-xs-12 col-md-6 q-pa-md" label="Contraseña *" v-model="objeto.contrasenna" color="primary" counter
                          maxlength="8"
                           />
 
-                          <q-input class="col-xs-12 col-md-6" label="Confirmar Contraseña *" v-model="objeto.contrasennaConfirmada" color="primary" counter
+                          <q-input v-show="!objeto.id" class="col-xs-12 col-md-6 q-pa-md" label="Confirmar Contraseña *" v-model="objeto.contrasennaConfirmada" color="primary" counter
                               maxlength="8"
                           />
 
-                    <q-card-actions class="col-12 q-mt-md justify-end">
+                    <q-card-actions class="col-12 q-mt-md  q-pa-md justify-end">
                         <q-btn class="text-white" color="primary" aling="right" type="submit" label="Guardar" />
                         <q-btn outline color="primary" type="reset" label="Cancelar" />
                     </q-card-actions>
@@ -164,8 +166,8 @@
     </q-dialog>
 
     <q-dialog v-model="dialogCambiarContrasenha" persistent>
-        <q-card style="width: 700px; max-width: 80vw; height: auto">
-            <header class="q-pa-sm bg-primary">
+        <q-card style="width: auto; max-width: 80vw; height: auto">
+            <header class="q-pa-sm  " style="background: linear-gradient(146deg,#222222  0%, #656e6e 150%)">
                 <q-toolbar>
                     <q-toolbar-title class="text-subtitle6 text-white">
                         {{
@@ -175,17 +177,17 @@
             </header>
             <q-form @submit.prevent="CambiarContrasenha()" @reset="closeCambiarContrasenha" ref="myFormCambiarContrasenha">
                 <div class="h row q-ma-md">
-                    <q-input class="col-xs-12 col-md-3" label="Contraseña anterior *" v-model="objetoContrasenha.contrasennaAntigua" color="primary" counter
+                    <q-input class="col-xs-12 col-md-4 q-pa-md" label="Contraseña anterior *" v-model="objetoContrasenha.contrasennaAntigua" color="primary" counter
                         maxlength="8" :rules="[ ]" />
 
-                        <q-input class="col-xs-12 col-md-3" label="Nueva contraseña *" v-model="objetoContrasenha.nuevaContrasenna" color="primary" counter
+                        <q-input class="col-xs-12 col-md-4 q-pa-md" label="Nueva contraseña *" v-model="objetoContrasenha.nuevaContrasenna" color="primary" counter
                         maxlength="8" :rules="[ ]" />
 
-                        <q-input class="col-xs-12 col-md-5" label="Confirmación de contraseña *" v-model="objetoContrasenha.contrasennaConfirmada" color="primary" counter
+                        <q-input class="col-xs-12 col-md-4 q-pa-md" label="Confirmación de contraseña *" v-model="objetoContrasenha.contrasennaConfirmada" color="primary" counter
                         maxlength="8" :rules="[ ]" />
 
 
-                    <q-card-actions class="col-12 q-mt-md justify-end">
+                    <q-card-actions class="col-12 q-mt-md q-pa-md justify-end">
                         <q-btn class="text-white" color="primary" aling="right" type="submit" label="Guardar" />
                         <q-btn outline color="primary" type="reset" label="Cancelar" />
                     </q-card-actions>
@@ -208,6 +210,9 @@ import {
     validarSoloNumeros,
     filterOptions,
     saveDataCambiarContrasenha,
+    loadHastaData,
+    loadListaFiltro,
+    imprimirTodosFiltradoSoloTexto,
 } from 'src/assets/js/util/funciones'
 import { PonerPuntosSupensivosACampo } from 'src/assets/js/util/extras'
 import { onlyLetter_Number, string, onlyLetter_Number_No_White_Spaces,onlyLettersAndSpaces } from 'src/assets/js/util/validator_form'
@@ -231,7 +236,7 @@ const router = useRouter();
 
 // DATOS DE LA TABLA
 const columns = dataColumnTrabajador;
-const filter = ref("");
+const filtroBusqueda = ref('')
 const items = ref([]);
 
 // DIALOGS VAR
@@ -286,6 +291,8 @@ onMounted(async () => {
     items.value = (await loadGet('Usuario/ObtenerListadoPaginado')) ?? []; // Condicion para en caso de error la tabla no de error ya q la api devulve undefined
     itemsRoles.value = (await loadGet('Rol/ObtenerListadoPaginado')) ?? []; // Condicion para en caso de error la tabla no de error ya q la api devulve undefined
 
+    itemsRoles.value = itemsRoles.value.filter(e=>e.nombre !== "Administrador")
+
     dialogLoad.value = false;
 });
 
@@ -318,17 +325,26 @@ const obtenerElementoPorIdCambiarContrasenha = async (id) => {
 
 // Funcion para eliminar elemento
 const eliminar = async () => {
-    await eliminarElemento(
-        'Usuario/Eliminar',
-        idElementoSeleccionado.value,
-        load,
-        dialogLoad
-    ).
-        then(async (response) => {
-            return response
-        }).catch(async (error) => {
-            Error(Error_Notify_DelecteObject)
-        })
+
+    let esAdmin = await loadHastaData(`Usuario/EsAdministrador?usuarioId=${idElementoSeleccionado.value}`)
+
+    if(esAdmin){
+        Error("No puede eliminar al Admin.")
+    }
+    else{
+
+        await eliminarElemento(
+            'Usuario/Eliminar',
+            idElementoSeleccionado.value,
+            load,
+            dialogLoad
+        ).
+            then(async (response) => {
+                return response
+            }).catch(async (error) => {
+                Error(Error_Notify_DelecteObject)
+            })
+    }
 }
 
 // Funcion para abrir el dialog de eliminar y pasar el id del elemento
@@ -353,6 +369,40 @@ const close = async () => {
 }
 
 const closeCambiarContrasenha = async () => {
+    Object.assign(objeto, objetoInicial)
+    delete objeto.id
     closeDialog(objetoContrasenha, objetoInicialContrasenha, myFormCambiarContrasenha, dialogCambiarContrasenha)
 }
+
+// Funcion para cargar lista de busqueda por codigo o descripcion ademas del filtro seleccionado
+const CargarBusquedaFiltro = async () => {
+    dialogLoad.value=true
+    //Tiene texto escrito
+    if (filtroBusqueda.value != null && filtroBusqueda.value != '') {
+        items.value = await loadListaFiltro(`Usuario/ObtenerListadoPaginado?TextoBuscar=${filtroBusqueda.value}`)
+    }
+
+    //No Tiene texto escrito
+     else {
+        items.value = await loadListaFiltro('Usuario/ObtenerListadoPaginado')
+
+    }
+    dialogLoad.value=false
+}
+
+const imprimir = async () =>{
+
+if(items.value.length !== 0){
+const texto = filtroBusqueda.value
+console.log("texto: ",texto)
+    const url = '/Usuario/ImprimirPorFiltro'
+    dialogLoad.value = true // activar Loading
+    await imprimirTodosFiltradoSoloTexto(url, texto)
+    dialogLoad.value = false // Desactivar Loading
+}
+else{
+    Error("No tiene elementos para imprimir")
+}
+}
+
 </script>

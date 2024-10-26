@@ -1,7 +1,7 @@
 <template>
-    <div class="q-pa-md" style="max-width: 350px; font-weight: 700; color: #205072">
-        <q-list padding class="rounded-borders">
-            <div v-for="(link, index) in essentialListUrl" :key="index">
+    <div class="q-pa-md" style="max-width: 350px; font-weight: 700; color: #111111">
+        <q-list padding class="rounded-borders" >
+            <div v-for="(link, index) in filteredListLinks" :key="index">
                 <q-item class="navbar-late q-pl-none" active-class="navbar-active" v-if="!link.children" clickable
                     :key="link.id" :to="{ name: link.link }" expand-separator>
                     <q-item-section class="q-ml-md" avatar>
@@ -43,10 +43,19 @@
 <script setup>
 import { essentialListUrl } from 'src/assets/js/util/essentialListUrl'
 
+const usuario = JSON.parse(localStorage.getItem('usuario'));
+
+const filteredListLinks= essentialListUrl.filter(links => {
+    if (usuario !== 'Administrador') {
+        return !['REGISTROS'].includes(links.title);
+    }
+    return true;
+});
+
 </script>
 
 <style>
 .navbar-active {
-    background-color: #e5f8f8;
+    background-color: #bbbbbb;
 }
 </style>

@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" UseFileCache="true" TextQuality="Regular" ReportInfo.Name="Simple List" ReportInfo.Author="Fast Reports Inc" ReportInfo.Description="Demonstrates a simple list report. To create it:&#13;&#10;- go to &quot;Data&quot; menu and select &quot;Choose Report Data...&quot; item to select a datasource;&#13;&#10;- go to &quot;Report|Configure Bands...&quot; menu to create the band structure;&#13;&#10;- return to the report page, doubleclick the data band to show its editor;&#13;&#10;- choose the datasource;&#13;&#10;- drag data from the Data Dictionary window to the band." ReportInfo.Created="01/17/2008 03:05:57" ReportInfo.Modified="10/25/2024 23:38:55" ReportInfo.CreatorVersion="2020.1.17.0">
+  <Dictionary>
+    <JsonDataSourceConnection Name="Connection" ConnectionString="rijcmlqwCAs7nkbrcYlJ+8X/nzNsDnf91Z4Zmic0ydM4R0WtDGaxKxpqIFvV0O10EWYdZo2/x28ESM8eaBsNKLLKrjqIbdCVa5xFpqtfXujVVd0ntIYbEsgdeXcRipGyV9qgJaIGgyoe0+5GrSKq9gRmimh/wnOvo7IBKPVVjrYEjQYUOKjnRhtCaupdOSlFE/Jif4B+Z96PBj6qEbDjCND5C4ViRkIaYHpOJfNG8BN+Q/4eclLWSDlCOfmQcOCfLbOQfJa9wpsJkRIs3+e7JE3+OzbhwfR27Hk/KyClhTwcDcz4rFwPqtHxwwLPPQbD2Q7SPZHcCk/UmWZI3Ni3CDtKbL1evv2e9w88aDdPP/h345Qy/XLIIOBCfAcN++AGEya1qSi6190xJI0QVsB+39jxsGyhUD44O9ErPt9ydD5VHfhqgvM1eQ2d1N/meJrKnz8I17XBF/g8uE940YBZpcJIfecvB6CvRdIBGkOciNf2Aq0c4LoJ2imlvs7HnYTmX6GCuHXDevKKyK0ptm8Nsgj2MoXKQEHX4m23xLw0+WfiPDGnIhKqOl2Wm5uDabHfOv+LxjmulheTQtobrl36qdr4hk7P0aFEGHYrHnTCC8pftLbH0buhTpM8UrRDlGDxzLmAB1eSbGA/vNDvyQzJGNj/LLhaktQIN5nbkGw6QXekCCm8SXYd7u0gczDPu8gos4CCwAiouqHHtOqIC2e5DsM6xAdB6vf+VVgZhSkXZi/AQLnD2gdYHA5lJbg/KIdJY8uFPPTti+L8CS2rRgX82wzACfVDd7hADKt3HS78xLyjSOVd5USqRnsW5BFazZiKLDAZrMaAgwlgMmbQ7pc3InUOYL++VMSK5PsspGH4fCKKWL2l5CBvYgL6bRJNgsAeDfZa9+bIW0eXXJz+SeAfMKRvt3MYwMXSAjL1j/v1Rh+hIdk+YUFQyjjx6zldN/y3A+hfF/mTdFLe5f7GzsIg+RRmbcFEAdp10qFhw+LtRqiOrK+R0HS5m2VgSKMVWo5Dgb5hY92Cz/dl8A+ud3vd76LzsFpDdE4Awu8Rr3iKtK1eVeK6DJlVKmr9cJoYI696WlD0CPphU/Nj8Ag2DNRZ72TImV+9pb6KZjpXkzckd16/ZKAPivuwhOGdWaI6RL5jiP9xYz5">
+      <JsonTableDataSource Name="JSON" DataType="FastReport.Data.JsonConnection.JsonParser.JsonArray" Enabled="true" TableName="JSON">
+        <Column Name="index" DataType="System.Int32"/>
+        <Column Name="item" DataType="FastReport.JsonBase">
+          <Column Name="EstadoProductoDescripcion" DataType="System.String"/>
+          <Column Name="Codigo" DataType="System.String"/>
+          <Column Name="Descripcion" DataType="System.String"/>
+          <Column Name="Costo" DataType="System.Double" Format="Currency"/>
+          <Column Name="PrecioUSD" DataType="System.Double" Format="Currency"/>
+          <Column Name="Cantidad" DataType="System.Int64" Format="Number"/>
+          <Column Name="CantidadStock" DataType="System.Int64" Format="Number"/>
+          <Column Name="EstadoProductoId" DataType="System.String"/>
+          <Column Name="Id" DataType="System.String"/>
+        </Column>
+        <Column Name="array" DataType="FastReport.JsonBase"/>
+      </JsonTableDataSource>
+    </JsonDataSourceConnection>
+  </Dictionary>
+  <ReportPage Name="Page1" Landscape="true" PaperWidth="297" PaperHeight="210" RawPaperSize="9" Watermark.Font="Arial, 60pt">
+    <ReportTitleBand Name="ReportTitle1" Width="1047.06" Height="85.05" Border.Lines="Bottom" CanGrow="true">
+      <TextObject Name="Text1" Left="9.45" Top="9.45" Width="236.25" Height="18.9" Text="FASHION STORE&#13;&#10;" VertAlign="Center" Font="Times New Roman, 13pt, style=Bold"/>
+      <TextObject Name="Text8" Left="9.45" Top="37.8" Width="207.9" Height="18.9" Text="Creador: XSCompany" Font="Times New Roman, 11pt, style=Bold"/>
+      <TextObject Name="Text2" Left="415.8" Top="-9.45" Width="217.35" Height="37.8" Text="Productos" HorzAlign="Center" VertAlign="Center" Font="Times New Roman, 13pt, style=Bold"/>
+      <TextObject Name="Text3" Left="812.7" Width="132.3" Height="28.35" Text="Fecha de Emisión:" HorzAlign="Right" VertAlign="Center" Font="Times New Roman, 11pt, style=Bold"/>
+      <TextObject Name="Text11" Left="954.45" Width="94.5" Height="28.35" Text="[Day([Date])]/[Month([Date])]/[Year([Date])]" VertAlign="Center" Font="Times New Roman, 11pt"/>
+      <TextObject Name="Text13" Left="954.45" Top="28.35" Width="103.95" Height="18.9" Text="[FormatDateTime([Date],&quot;hh:mm&quot;)] [IIf(Hour([Date]) &gt;= 12,&quot;pm&quot;, &quot;am&quot;)]" Format="Time" Format.Format="t" VertAlign="Center" Font="Times New Roman, 11pt"/>
+    </ReportTitleBand>
+    <PageHeaderBand Name="PageHeader1" Top="89.05" Width="1047.06" Height="37.8">
+      <TableObject Name="Table1" Width="1061.6" Height="37.8" Border.Lines="Top, Bottom">
+        <TableColumn Name="Column10" Width="141.73"/>
+        <TableColumn Name="Column2" Width="300.23"/>
+        <TableColumn Name="Column9" Width="157.47"/>
+        <TableColumn Name="Column11" Width="113.4"/>
+        <TableColumn Name="Column12" Width="94.5"/>
+        <TableColumn Name="Column13" Width="103.95"/>
+        <TableColumn Name="Column8" Width="150.32"/>
+        <TableRow Name="Row1" Height="37.8">
+          <TableCell Name="Cell10" Text="Código" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell9" Text="Descripción" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell2" Border.Lines="Top, Bottom" Text="Costo" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell11" Text="Precio (USD)" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell12" Text="Cantidad" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell13" Text="Stock" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+          <TableCell Name="Cell8" Text="Estado" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt, style=Bold"/>
+        </TableRow>
+      </TableObject>
+    </PageHeaderBand>
+    <DataBand Name="Data1" Top="130.85" Width="1047.06" Height="47.25" CanGrow="true" DataSource="JSON">
+      <TextObject Name="Text4" Top="9.45" Width="141.75" Height="37.8" CanGrow="true" Text="[JSON.item.Codigo]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text6" Left="151.2" Top="9.45" Width="283.5" Height="37.8" CanGrow="true" Text="[JSON.item.Descripcion]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text17" Left="926.1" Top="9.45" Width="122.85" Height="37.8" CanGrow="true" Text="[JSON.item.EstadoProductoDescripcion]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text9" Left="444.15" Top="9.45" Width="151.2" Height="37.8" Text="[JSON.item.Costo]" Format="Currency" Format.UseLocale="false" Format.DecimalDigits="2" Format.DecimalSeparator="." Format.GroupSeparator="." Format.CurrencySymbol="$" Format.PositivePattern="3" Format.NegativePattern="8" HorzAlign="Center" VertAlign="Center" WordWrap="false" Font="Arial, 10pt" Trimming="EllipsisCharacter"/>
+      <TextObject Name="Text10" Left="604.8" Top="9.45" Width="103.95" Height="37.8" Text="[JSON.item.PrecioUSD]" Format="Currency" Format.UseLocale="false" Format.DecimalDigits="2" Format.DecimalSeparator="." Format.GroupSeparator="." Format.CurrencySymbol="$" Format.PositivePattern="3" Format.NegativePattern="8" HorzAlign="Center" VertAlign="Center" WordWrap="false" Font="Arial, 10pt" Trimming="EllipsisCharacter"/>
+      <TextObject Name="Text16" Left="812.7" Top="9.45" Width="94.5" Height="37.8" Text="[JSON.item.CantidadStock]" Format="Number" Format.UseLocale="true" Format.DecimalDigits="0" HorzAlign="Center" VertAlign="Center" WordWrap="false" Font="Arial, 10pt" Trimming="EllipsisCharacter"/>
+      <TextObject Name="Text12" Left="718.2" Top="9.45" Width="85.05" Height="37.8" Text="[JSON.item.Cantidad]" Format="Number" Format.UseLocale="true" Format.DecimalDigits="0" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+    </DataBand>
+    <PageFooterBand Name="PageFooter1" Top="182.1" Width="1047.06" Height="37.8">
+      <TextObject Name="Text7" Left="292.95" Top="9.45" Width="66.15" Height="18.9" Text="Página: " HorzAlign="Right" VertAlign="Center" Font="Times New Roman, 11pt, style=Bold"/>
+      <TextObject Name="Text5" Left="368.55" Top="9.45" Width="56.7" Height="18.9" Text="[Page#] / [TotalPages#]" VertAlign="Center" Font="Times New Roman, 11pt"/>
+      <TextObject Name="Text14" Left="557.55" Top="9.45" Width="85.05" Height="18.9" Text="Operador:" HorzAlign="Right" VertAlign="Center" Font="Times New Roman, 11pt, style=Bold"/>
+      <TextObject Name="Text15" Left="661.5" Top="9.45" Width="47.25" Height="18.9" Text="get" VertAlign="Center" Font="Times New Roman, 11pt"/>
+    </PageFooterBand>
+  </ReportPage>
+</Report>

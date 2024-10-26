@@ -1,5 +1,5 @@
-﻿using API.Data.Entidades.Pago.Nomencladores;
-using API.Data.Entidades.Seguridad;
+﻿using API.Data.Entidades.Gestion.Nomencladores;
+using API.Data.Entidades.Pago.Nomencladores;
 using API.Data.IUnitOfWorks.Interfaces;
 using API.Domain.Exceptions;
 using API.Domain.Interfaces.Pago.Nomencladores;
@@ -22,8 +22,24 @@ namespace API.Domain.Services.Pago.Nomencladores
             PagoGestor? pagoGestor = await ObtenerPorId(entity.Id) ??
                 throw new CustomException() { Status = StatusCodes.Status404NotFound, Message = "Elemento no encontrado." };
 
-            pagoGestor.Pagado=entity.Pagado;
+            pagoGestor.Pagado = entity.Pagado;
             return await base.Actualizar(pagoGestor);
+        }
+
+        public async Task<string> ObtenerNombreCompletoGestorPorVentaDada(Guid ventaId)
+        {
+            ProductoVendido? productoVendido = await _repositorios.ProductosVendidos.FirstAsync(e => e.VentaId == ventaId);
+
+            if (productoVendido != null)
+            {
+                Gestor? gestor = await _repositorios.Gestores.FirstAsync(e => e.Id == productoVendido.GestorId);
+                if (gestor != null)
+                {
+                    return gestor.Nombre +" "+ gestor.Apellidos;
+                }
+                
+            }
+            return string.Empty;
         }
     }
 }

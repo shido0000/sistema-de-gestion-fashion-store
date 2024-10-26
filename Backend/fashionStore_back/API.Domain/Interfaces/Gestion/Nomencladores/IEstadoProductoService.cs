@@ -5,5 +5,6 @@ namespace API.Domain.Interfaces.Gestion.Nomencladores
 {
     public interface IEstadoProductoService : IBaseService<EstadoProducto, EstadoProductoValidator>
     {
+        Task<Guid> ObtenerIdPorDescripcion(string descripcion);
     }
 }

@@ -26,12 +26,13 @@ public class EstadoProductoConfiguracionDB
             Id = new Guid("37760DA6-B5DE-4A1D-B5B7-CDE6A462E192"),
             Descripcion = "Agotado",
         };
-        EstadoProducto estadoProductoReservado = new()
+        /*EstadoProducto estadoProductoReservado = new()
         {
             Id = new Guid("4BEEEB16-931B-4F2A-9355-FA19CF76ED54"),
             Descripcion = "Reservado",
-        };
-        modelBuilder.Entity<EstadoProducto>().HasData(estadoProductoDisponible,estadoProductoAgotado,estadoProductoReservado);
+        };*/
+        // modelBuilder.Entity<EstadoProducto>().HasData(estadoProductoDisponible,estadoProductoAgotado,estadoProductoReservado);
+        modelBuilder.Entity<EstadoProducto>().HasData(estadoProductoDisponible, estadoProductoAgotado);
         #endregion
     }
 }

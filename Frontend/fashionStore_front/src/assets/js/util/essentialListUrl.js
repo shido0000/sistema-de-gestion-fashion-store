@@ -9,7 +9,7 @@ export const essentialListUrl = [
         children: [
             {
                 title: 'Gestión',
-                icon: 'apartment',
+                icon: 'mdi-cog',
                 link: 'Gestion'
             },
 
@@ -21,7 +21,7 @@ export const essentialListUrl = [
         children: [
             {
                 title: 'Pagos',
-                icon: 'apartment',
+                icon: 'mdi-credit-card',
                 link: 'Pago'
             },
 
